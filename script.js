@@ -134,17 +134,17 @@ class Portfolio {
                 '.',
                 'com'
             ];
-            
+
             // 遅延表示でボット対策
             setTimeout(() => {
                 const fullEmail = parts.join('');
                 emailLink.textContent = fullEmail;
                 emailLink.href = 'mailto:' + fullEmail;
-                
+
                 // ローディング表示を削除
                 emailLink.classList.remove('loading');
             }, 500);
-            
+
             // クリック時の追加保護
             emailLink.addEventListener('click', (e) => {
                 // 人間のクリックかどうかを確認（簡単な検証）
@@ -156,31 +156,8 @@ class Portfolio {
     }
 
     setupFormHandling() {
-        // フォーム送信を処理
-        const form = document.querySelector('.contact-form');
-        if (form) {
-            form.addEventListener('submit', (e) => {
-                e.preventDefault();
-                
-                // フォームデータを取得
-                const formData = new FormData(form);
-                
-                // Netlify Formsに送信
-                fetch('/', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                    body: new URLSearchParams(formData).toString()
-                })
-                .then(() => {
-                    // 成功時はサンクユーページにリダイレクト
-                    window.location.href = '/thank-you';
-                })
-                .catch((error) => {
-                    console.error('Error:', error);
-                    alert('送信に失敗しました。もう一度お試しください。');
-                });
-            });
-        }
+        // Netlify Formsの標準的な動作に任せる
+        // JavaScriptでの処理は削除
     }
 
 }
