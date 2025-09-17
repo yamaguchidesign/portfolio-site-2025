@@ -470,7 +470,7 @@ body {
     display: flex;
     flex-direction: column;
     gap: 20px;
-    padding: 40px;
+    padding: 0;
 }
 
 .work-image-vertical {
