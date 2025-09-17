@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Works - Shohei Yamaguchi</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="data.js"></script>
+    <script>
+        // Check if data.js loaded correctly
+        window.addEventListener('load', () => {
+            if (typeof portfolioData === 'undefined') {
+                console.error('portfolioData not loaded from data.js');
+                document.body.innerHTML = '<div style="padding: 50px; text-align: center;"><h1>Error</h1><p>Failed to load portfolio data. Please check the console for details.</p></div>';
+            } else {
+                console.log('portfolioData loaded successfully:', portfolioData);
+            }
+        });
+    </script>
+    <script src="all-works-script.js"></script>
+</head>
+
+<body>
+    <!-- Side Menu -->
+    <aside class="side-menu">
+        <div class="side-menu-content">
+            <div class="profile-info">
+                <h1 class="logo">Shohei Yamaguchi</h1>
+                <p class="profile-title">Art Director</p>
+                <p class="profile-subtitle">Graphic Design • Web Design • UI/UX • Illustration • Branding</p>
+            </div>
+            <nav class="nav">
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="all-works.html" class="nav-link active">All Works</a>
+                <a href="index.html#about" class="nav-link">About</a>
+                <a href="index.html#contact" class="nav-link">Contact</a>
+            </nav>
+            <button id="backToTop" class="back-to-top">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 19V5M5 12l7-7 7 7" />
+                </svg>
+                Top
+            </button>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Works Section -->
+        <section id="works" class="works">
+            <div class="container">
+                <div class="section-header">
+                    <h2 class="section-title">All Works</h2>
+                    <p class="section-subtitle">Filter by tags to explore specific types of work</p>
+                </div>
+
+                <!-- Tag Filter -->
+                <div class="tag-filter">
+                    <button class="filter-btn active" data-tag="all">All</button>
+                    <div id="tagButtons"></div>
+                </div>
+
+                <!-- Works Grid -->
+                <div id="worksGrid" class="works-grid">
+                    <!-- Works will be dynamically loaded here -->
+                </div>
+            </div>
+        </section>
+    </main>
+</body>
+
+</html>

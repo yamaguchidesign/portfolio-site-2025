@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shohei Yamaguchi - Portfolio</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <!-- Side Menu -->
+    <aside class="side-menu">
+        <div class="side-menu-content">
+            <div class="profile-info">
+                <h1 class="logo">Shohei Yamaguchi</h1>
+                <p class="profile-title">Art Director</p>
+                <p class="profile-subtitle">Graphic Design • Web Design • UI/UX • Illustration • Branding</p>
+            </div>
+            <nav class="nav">
+                <a href="index.html" class="nav-link active">Home</a>
+                <a href="all-works.html" class="nav-link">All Works</a>
+                <a href="#about" class="nav-link">About</a>
+                <a href="#contact" class="nav-link">Contact</a>
+            </nav>
+            <button id="backToTop" class="back-to-top">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 19V5M5 12l7-7 7 7" />
+                </svg>
+                Top
+            </button>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Works Section -->
+        <section id="works" class="works">
+            <div class="container">
+                <div class="works-vertical" id="worksVertical">
+                    <!-- Works will be loaded dynamically -->
+                </div>
+            </div>
+        </section>
+
+        <!-- About Section -->
+        <section id="about" class="about">
+            <div class="container">
+                <div class="about-content">
+                    <h2 class="section-title">About</h2>
+                    <div class="about-wrapper">
+                        <div class="about-image">
+                            <img src="images/IMG_0099_y_square.jpg" alt="Shohei Yamaguchi" class="profile-image">
+                        </div>
+                        <div class="about-text">
+                            <h3>Profile</h3>
+                            <p>I specialize in branding, logo design, and web design with over 10 years of professional
+                                experience, and have more than 5 years in UI/UX design. With a Bachelor of Fine Arts
+                                from
+                                Musashino Art University, I combine strong design fundamentals with the ability to
+                                capture
+                                and translate client needs into effective creative solutions.</p>
+
+                            <h3>Core Expertise</h3>
+                            <ul>
+                                <li><strong>Branding:</strong> From defining mission, vision, and values to creating
+                                    marketing strategies, translating them into tactics, and delivering consistent brand
+                                    outputs.</li>
+                                <li><strong>Graphic Design:</strong> Skilled in print materials such as brochures,
+                                    posters,
+                                    flyers, and restaurant menus.</li>
+                                <li><strong>Web Design & Development:</strong> Capable of handling the entire process
+                                    from
+                                    wireframing to final launch, including hands-on implementation with HTML/CSS.</li>
+                                <li><strong>UI/UX Design:</strong> Experienced in designing intuitive user experiences
+                                    for
+                                    mobile apps and SaaS applications.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact" class="contact">
+            <div class="container">
+                <div class="contact-content">
+                    <h2 class="section-title">Contact</h2>
+                    <div class="contact-info">
+                        <p class="contact-email">Email: <a href="#" id="email-link"
+                                class="email-link loading">Loading...</a></p>
+                        <div class="social-links">
+                            <a href="https://twitter.com/yourusername" target="_blank" class="social-link">Twitter</a>
+                            <a href="https://note.com/yourusername" target="_blank" class="social-link">Note</a>
+                        </div>
+                    </div>
+
+                    <!-- Contact Form -->
+                    <div class="contact-form-wrapper">
+                        <h3 class="form-title">Send Message</h3>
+                        <form name="contact" method="POST" netlify class="contact-form">
+                            <div class="form-group">
+                                <label for="name" class="form-label">Name *</label>
+                                <input type="text" id="name" name="name" class="form-input" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="email" class="form-label">Email *</label>
+                                <input type="email" id="email" name="email" class="form-input" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="subject" class="form-label">Subject</label>
+                                <input type="text" id="subject" name="subject" class="form-input">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="message" class="form-label">Message *</label>
+                                <textarea id="message" name="message" class="form-textarea" rows="5"
+                                    required></textarea>
+                            </div>
+
+                            <button type="submit" class="form-submit">Send Message</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script src="data.js"></script>
+    <script src="script.js"></script>
+</body>
+
+</html>
