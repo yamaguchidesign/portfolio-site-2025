@@ -40,6 +40,12 @@ class AllWorks {
         });
     }
 
+    getTagCount(tag) {
+        return this.works.filter(work => {
+            return Array.isArray(work.tags) && work.tags.includes(tag);
+        }).length;
+    }
+
     handleUrlParams() {
         const urlParams = new URLSearchParams(window.location.search);
         const tagParam = urlParams.get('tag');
@@ -111,16 +117,16 @@ class AllWorks {
     renderTagButtons() {
         const tagButtonsContainer = document.getElementById('tagButtons');
         const sortedTags = Array.from(this.allTags).sort();
+        const totalWorks = this.works.length;
 
-        tagButtonsContainer.innerHTML = sortedTags.map(tag => `
-            <button class="filter-btn" data-tag="${tag}">${tag}</button>
-        `).join('');
-
-        // Set All button as active by default
-        const allButton = document.querySelector('[data-tag="all"]');
-        if (allButton) {
-            allButton.classList.add('active');
-        }
+        // All button + tag buttons in one block
+        tagButtonsContainer.innerHTML = [
+            `<button class="filter-btn active" data-tag="all">All(${totalWorks})</button>`,
+            ...sortedTags.map(tag => {
+                const count = this.getTagCount(tag);
+                return `<button class="filter-btn" data-tag="${tag}">${tag}(${count})</button>`;
+            })
+        ].join('');
     }
 
     renderWorks() {
@@ -145,7 +151,7 @@ class AllWorks {
                 <div class="work-image-container">
                     <img src="${work.images[0]}" alt="${work.title}" class="work-card-image" loading="lazy">
                     <div class="work-overlay">
-                        <a href="work${work.id}.html" class="work-link">View Project →</a>
+                        <a href="work.html?id=${work.id}" class="work-link">View Project →</a>
                     </div>
                 </div>
                 <div class="work-card-content">
@@ -174,7 +180,10 @@ class AllWorks {
 
     renderWorkTags(tags) {
         if (!Array.isArray(tags)) return '';
-        return tags.map(tag => `<span class="work-tag clickable-tag" data-tag="${tag}">${tag}</span>`).join('');
+        return tags.map(tag => {
+            const count = this.getTagCount(tag);
+            return `<span class="work-tag clickable-tag" data-tag="${tag}">${tag}(${count})</span>`;
+        }).join('');
     }
 
     setupScrollAnimations() {

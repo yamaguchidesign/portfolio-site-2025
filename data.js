@@ -3,15 +3,15 @@ const portfolioData = {
     "works": [
         {
             "id": 1,
-            "title": "E-commerce Platform Redesign",
-            "client": "TechCorp Inc.",
-            "description": "Complete redesign of a major e-commerce platform focusing on user experience and conversion optimization. Implemented modern design principles and improved the overall shopping experience.",
-            "tags": ["#Web", "#UI"],
+            "title": "コーンポター酒",
+            "client": "木花乃醸造所",
+            "description": "浅草初のCraft SAKE醸造所、木花乃醸造所とSAKEICEコラボ商品「コーンポター酒」のラベルデザインを制作しました。とうもろこしを使ったどぶろくをコーンポター酒と名付けた商品です。あえて伝統と歴史を感じさせるデザインにすることで、「創業令和二年」が強烈な違和感を出すというアイデアを採用いただきました。コーンの断面を家紋のように見せたり、日に焼けて色褪せたような色味に調整したりするなど、「昔ながらの日本酒ラベル」に見せる工夫を凝らしています。",
+            "tags": ["#WEB", "#UI"],
             "role": "designer",
             "images": [
-                "https://picsum.photos/800/600?random=1",
-                "https://picsum.photos/800/600?random=2",
-                "https://picsum.photos/800/600?random=3"
+                "images/works-1/1.jpg",
+                "images/works-1/2.jpg",
+                "images/works-1/3.jpg"
             ],
             "featured": true
         },
@@ -20,11 +20,11 @@ const portfolioData = {
             "title": "Brand Identity System",
             "client": "StartupXYZ",
             "description": "Comprehensive brand identity design including logo, color palette, typography, and brand guidelines. Created a cohesive visual system that reflects the company's innovative spirit.",
-            "tags": ["#Logo", "#Branding"],
+            "tags": ["#LOGO", "#BRANDING"],
             "role": "art-director",
             "images": [
-                "https://picsum.photos/800/600?random=4",
-                "https://picsum.photos/800/600?random=5"
+                "images/works-2/1/",
+                "images/works-2/2/"
             ],
             "featured": true
         },
@@ -33,12 +33,12 @@ const portfolioData = {
             "title": "Mobile App Interface",
             "client": "HealthApp",
             "description": "Design of a health tracking mobile application with focus on accessibility and user engagement. Created intuitive interfaces for complex health data visualization.",
-            "tags": ["#UI", "#Mobile"],
+            "tags": ["#UI", "#WEB"],
             "role": "designer",
             "images": [
-                "https://picsum.photos/800/600?random=6",
-                "https://picsum.photos/800/600?random=7",
-                "https://picsum.photos/800/600?random=8"
+                "images/works-3/1/",
+                "images/works-3/2/",
+                "images/works-3/3/"
             ],
             "featured": true
         },
@@ -47,11 +47,11 @@ const portfolioData = {
             "title": "Product Packaging Design",
             "client": "Organic Foods Co.",
             "description": "Sustainable packaging design for organic food products. Emphasized eco-friendly materials and clear product information hierarchy.",
-            "tags": ["#Graphic", "#Packaging"],
+            "tags": ["#GRAPHIC", "#PACKAGING"],
             "role": "designer",
             "images": [
-                "https://picsum.photos/800/600?random=9",
-                "https://picsum.photos/800/600?random=10"
+                "images/works-4/1/",
+                "images/works-4/2/"
             ],
             "featured": false
         },
@@ -60,13 +60,13 @@ const portfolioData = {
             "title": "Illustration Series",
             "client": "Magazine Publication",
             "description": "Editorial illustrations for a technology magazine. Created a series of conceptual illustrations that explain complex tech topics in an accessible way.",
-            "tags": ["#Illustration", "#Editorial"],
+            "tags": ["#ILLUSTRATION"],
             "role": "illustrator",
             "images": [
-                "https://picsum.photos/800/600?random=11",
-                "https://picsum.photos/800/600?random=12",
-                "https://picsum.photos/800/600?random=13",
-                "https://picsum.photos/800/600?random=14"
+                "images/works-5/1/",
+                "images/works-5/2/",
+                "images/works-5/3/",
+                "images/works-5/4/"
             ],
             "featured": true
         }

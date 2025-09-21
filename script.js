@@ -16,8 +16,8 @@ class Portfolio {
         this.init();
     }
 
-    init() {
-        this.loadWorks();
+    async init() {
+        await this.loadWorks();
         this.setupEventListeners();
         this.setupScrollAnimations();
         this.renderWorks();
@@ -25,11 +25,65 @@ class Portfolio {
         this.setupFormHandling();
     }
 
-    loadWorks() {
+    async loadWorks() {
         // Load works from the embedded data.js file
         this.works = portfolioData.works || [];
+
+        // txtファイルの情報も読み込んで統合
+        await this.loadTxtWorks();
+
         this.filteredWorks = [...this.works];
         console.log('Loaded works:', this.works.length);
+    }
+
+    async loadTxtWorks() {
+        // TxtWorkReaderを使用してtxtファイルから作品情報を読み込み
+        const txtReader = new TxtWorkReader();
+        const availableWorkIds = await txtReader.getAvailableWorkIds();
+
+        console.log('利用可能な作品ID:', availableWorkIds);
+
+        // 空の配列から開始して、txtファイルのデータのみを追加
+        this.works = [];
+
+        for (let workId of availableWorkIds) {
+            try {
+                console.log(`作品 ${workId} のtxtファイルを読み込み中...`);
+                const txtWorkData = await txtReader.loadWorkFromTxt(workId);
+                console.log(`作品 ${workId} の読み込み結果:`, txtWorkData);
+
+                if (txtWorkData) {
+                    // txtファイルから新しい作品データを作成
+                    console.log(`作品 ${workId} のタグデータ:`, txtWorkData.tags);
+                    const newWork = {
+                        id: workId,
+                        title: txtWorkData.title,
+                        client: txtWorkData.client,
+                        description: txtWorkData.description,
+                        role: 'designer',
+                        tags: txtWorkData.tags && txtWorkData.tags.length > 0 ? txtWorkData.tags : ['グラフィックデザイン'], // txtファイルからタグを読み込み
+                        images: [`images/works-${workId}/`],
+                        featured: true
+                    };
+                    this.works.push(newWork);
+                    console.log(`作品 ${workId} をtxtファイルから追加しました:`, newWork);
+                } else {
+                    console.warn(`作品 ${workId} のtxtファイルデータが空です`);
+                }
+            } catch (error) {
+                console.error(`作品 ${workId} のtxtファイル読み込みに失敗:`, error);
+            }
+        }
+
+        console.log('最終的な作品データ:', this.works);
+    }
+
+
+    // 作品タイトルからタグを生成（キーワードマッピング機能を削除）
+    generateTagsFromTitle(title) {
+        // キーワードマッピング機能を削除
+        // txtファイルで直接タグを指定する方式に変更
+        return [];
     }
 
     setupEventListeners() {
@@ -88,38 +142,161 @@ class Portfolio {
     }
 
 
-    renderWorks() {
+    async findImagesInFolder(folderPath) {
+        const imageExtensions = ['jpg', 'jpeg', 'png', 'webp', 'gif', 'svg'];
+        const foundImages = [];
+
+        // 連続する404エラーを避けるため、最初の数個のファイルが見つからない場合は早期終了
+        let consecutiveNotFound = 0;
+        const maxConsecutiveNotFound = 3;
+
+        // 1桁のパターン: 1.jpg, 2.jpg, 3.jpg など
+        const imageNumbers = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'];
+
+        for (const number of imageNumbers) {
+            let foundForThisNumber = false;
+
+            for (const ext of imageExtensions) {
+                const imagePath = `${folderPath}${number}.${ext}`;
+                try {
+                    const response = await fetch(imagePath, { method: 'HEAD' });
+                    if (response.ok) {
+                        foundImages.push(imagePath);
+                        foundForThisNumber = true;
+                        consecutiveNotFound = 0; // リセット
+                        break; // 1つの番号で見つかったら次の番号に進む
+                    }
+                } catch (error) {
+                    // ファイルが存在しない場合は次の拡張子を試す
+                }
+            }
+
+            if (!foundForThisNumber) {
+                consecutiveNotFound++;
+                // 連続してファイルが見つからない場合、早期終了
+                if (consecutiveNotFound >= maxConsecutiveNotFound) {
+                    console.log(`フォルダ ${folderPath}: 連続${consecutiveNotFound}回ファイルが見つからないため、検索を終了`);
+                    break;
+                }
+            }
+        }
+
+        // 1桁でファイルが見つからない場合、2桁のパターンも試す: 01.png, 02.png など
+        if (foundImages.length === 0) {
+            consecutiveNotFound = 0;
+            const twoDigitNumbers = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10'];
+
+            for (const number of twoDigitNumbers) {
+                let foundForThisNumber = false;
+
+                for (const ext of imageExtensions) {
+                    const imagePath = `${folderPath}${number}.${ext}`;
+                    try {
+                        const response = await fetch(imagePath, { method: 'HEAD' });
+                        if (response.ok) {
+                            foundImages.push(imagePath);
+                            foundForThisNumber = true;
+                            consecutiveNotFound = 0; // リセット
+                            break; // 1つの番号で見つかったら次の番号に進む
+                        }
+                    } catch (error) {
+                        // ファイルが存在しない場合は次の拡張子を試す
+                    }
+                }
+
+                if (!foundForThisNumber) {
+                    consecutiveNotFound++;
+                    // 連続してファイルが見つからない場合、早期終了
+                    if (consecutiveNotFound >= maxConsecutiveNotFound) {
+                        console.log(`フォルダ ${folderPath}: 連続${consecutiveNotFound}回ファイルが見つからないため、検索を終了`);
+                        break;
+                    }
+                }
+            }
+        }
+
+        console.log(`フォルダ ${folderPath}: ${foundImages.length}個の画像ファイルを発見:`, foundImages);
+        return foundImages;
+    }
+
+
+
+
+
+    async loadWorkImages(work) {
+        // 直接ファイルパスを使用する場合
+        if (work.images && work.images.length > 0) {
+            // ファイルパスが直接指定されている場合
+            if (work.images[0].includes('.')) {
+                return work.images; // 直接ファイルパスを返す
+            }
+            // フォルダパスが指定されている場合
+            else {
+                const imagePromises = work.images.map(folderPath =>
+                    this.findImagesInFolder(folderPath)
+                );
+                const imageResults = await Promise.all(imagePromises);
+                return imageResults.flat(); // 2次元配列を1次元に変換
+            }
+        }
+        return [];
+    }
+
+    getTagCount(tag) {
+        return this.works.filter(work => {
+            if (Array.isArray(work.tags)) {
+                return work.tags.includes(tag);
+            } else {
+                return work.tags === tag;
+            }
+        }).length;
+    }
+
+    async renderWorks() {
         const worksVertical = document.getElementById('worksVertical');
         console.log('Rendering works:', this.works.length, 'works');
+        console.log('Works data:', this.works);
 
         if (this.works.length === 0) {
             worksVertical.innerHTML = '<p class="no-works">No works found.</p>';
             return;
         }
 
-        worksVertical.innerHTML = this.works.map((work, index) => `
+        // 各作品の画像を非同期で読み込み
+        const worksWithImages = await Promise.all(
+            this.works.map(async (work) => {
+                console.log('Processing work:', work);
+                const images = await this.loadWorkImages(work);
+                return { ...work, loadedImages: images };
+            })
+        );
+
+        worksVertical.innerHTML = worksWithImages.map((work, index) => {
+            console.log(`Rendering work ${index}:`, work.title, work.client, work.description);
+            return `
             <div class="work-item-vertical" style="animation-delay: ${index * 0.2}s">
                 <div class="work-header-vertical">
-                    <h2 class="work-title-vertical">${work.title}</h2>
+                    <h2 class="work-title-vertical">${work.title || 'タイトルなし'}</h2>
                     <div class="work-meta-vertical">
-                        <p class="work-client-vertical">${work.client}</p>
-                        <p class="work-role-vertical">role: ${this.roles[work.role] || work.role}</p>
-                        <div class="work-tags-vertical">${Array.isArray(work.tags) ? work.tags.map(tag => `<span class="work-tag clickable-tag" data-tag="${tag}">${tag}</span>`).join('') : `<span class="work-tag clickable-tag" data-tag="${work.tags}">${work.tags}</span>`}</div>
+                        <p class="work-client-vertical">${work.client || 'クライアント名なし'}</p>
+                        <p class="work-role-vertical">role: ${this.roles[work.role] || work.role || 'designer'}</p>
+                        <div class="work-tags-vertical">${Array.isArray(work.tags) ? work.tags.map(tag => `<span class="work-tag clickable-tag" data-tag="${tag}">${tag}(${this.getTagCount(tag)})</span>`).join('') : `<span class="work-tag clickable-tag" data-tag="${work.tags || 'デザイン'}">${work.tags || 'デザイン'}(${this.getTagCount(work.tags || 'デザイン')})</span>`}</div>
                     </div>
                 </div>
                 
                 <div class="work-images-vertical">
-                    ${work.images.map(img => `
-                        <img src="${img}" alt="${work.title}" class="work-image-vertical" loading="lazy">
-                    `).join('')}
+                    ${work.loadedImages.length > 0 ? work.loadedImages.map(img => `
+                        <img src="${img}" alt="${work.title || '作品画像'}" class="work-image-vertical" loading="lazy">
+                    `).join('') : '<p class="no-images">画像が見つかりませんでした。</p>'}
                 </div>
                 
                 <div class="work-description-vertical">
-                    <p>${work.description}</p>
-                    <a href="work${work.id}.html" class="work-link">View Individual Page →</a>
+                    <p>${work.description || '説明がありません。'}</p>
+                    <a href="work.html?id=${work.id}" class="work-link">View Individual Page →</a>
                 </div>
             </div>
-        `).join('');
+            `;
+        }).join('');
     }
 
     setupEmailProtection() {
@@ -200,6 +377,9 @@ function initBackToTop() {
 
 // Initialize portfolio when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
+    // ページ読み込み時にスクロール位置を最上部にリセット
+    window.scrollTo(0, 0);
+
     new Portfolio();
     initBackToTop();
 });
@@ -208,5 +388,10 @@ document.addEventListener('DOMContentLoaded', () => {
 // Add loading state
 window.addEventListener('load', () => {
     document.body.classList.add('loaded');
+
+    // ページ完全読み込み後にもスクロール位置をリセット
+    setTimeout(() => {
+        window.scrollTo(0, 0);
+    }, 100);
 });
 

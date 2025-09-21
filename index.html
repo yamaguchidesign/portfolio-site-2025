@@ -8,31 +8,20 @@
     <link rel="stylesheet" href="style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://api.fontshare.com/v2/css?f[]=satoshi@400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400&display=swap" rel="stylesheet">
+    <script>
+        // ページ読み込み時にスクロール位置を最上部にリセット
+        window.addEventListener('beforeunload', function () {
+            window.scrollTo(0, 0);
+        });
+    </script>
 </head>
 
 <body>
     <!-- Side Menu -->
     <aside class="side-menu">
-        <div class="side-menu-content">
-            <div class="profile-info">
-                <h1 class="logo">Shohei Yamaguchi</h1>
-                <p class="profile-title">Art Director</p>
-                <p class="profile-subtitle">Graphic Design • Web Design • UI/UX • Illustration • Branding</p>
-            </div>
-            <nav class="nav">
-                <a href="index.html" class="nav-link active">Home</a>
-                <a href="all-works.html" class="nav-link">All Works</a>
-                <a href="#about" class="nav-link">About</a>
-                <a href="#contact" class="nav-link">Contact</a>
-            </nav>
-            <button id="backToTop" class="back-to-top">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M12 19V5M5 12l7-7 7 7" />
-                </svg>
-                Top
-            </button>
-        </div>
+        <!-- サイドバーはsidebar.jsで動的に生成されます -->
     </aside>
 
     <!-- Main Content -->
@@ -94,8 +83,8 @@
                         <p class="contact-email">Email: <a href="#" id="email-link"
                                 class="email-link loading">Loading...</a></p>
                         <div class="social-links">
-                            <a href="https://twitter.com/yourusername" target="_blank" class="social-link">Twitter</a>
-                            <a href="https://note.com/yourusername" target="_blank" class="social-link">Note</a>
+                            <a href="https://twitter.com/yamaguchidesign" target="_blank" class="social-link">X</a>
+                            <a href="https://note.com/93_design" target="_blank" class="social-link">Note</a>
                         </div>
                     </div>
 
@@ -132,7 +121,9 @@
         </section>
     </main>
 
+    <script src="sidebar.js"></script>
     <script src="data.js"></script>
+    <script src="txt-reader.js"></script>
     <script src="script.js"></script>
 </body>
 
