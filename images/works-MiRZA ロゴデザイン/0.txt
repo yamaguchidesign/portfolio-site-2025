@@ -1,0 +1,33 @@
+---
+タグ一覧
+・ロゴ
+・UI/UX
+・ブランディング
+・Web
+・キャラクターデザイン
+・パッケージ
+・イラストレーション
+
+役割一覧
+・Art Director
+・Designer
+・Illustrator
+・Engineer
+---
+
+--- 共通 ---
+ID:mirza-logo
+
+--- 日本語 ---
+クライアント:株式会社NTTコノキューデバイス
+作品名:MiRZA ロゴデザイン
+役割:Art Director
+タグ:ロゴ
+紹介文:株式会社NTTコノキューデバイスの新しいXRデバイスのロゴデザインを担当しました。Aにアイデンティティを持たせて全体を丸みのあるフォルムにすることで、デバイスの持つ技術力や先進性を表しつつも、万人に受け入れられるような親しみやすさと安定感を表現しました。
+
+--- English ---
+Client:NTT ConoQ Device Inc.
+Title:MiRZA Logo Design
+Role:Art Director
+Tags:Logo
+Description:Designed the logo for a new XR device by NTT ConoQ Device Inc. By giving identity to the letter A and making the overall form rounded, we expressed the device's technological capabilities and advanced features while maintaining approachability and stability that everyone can accept.

@@ -37,6 +37,8 @@ class Portfolio {
     }
 
     async loadTxtWorks() {
+        console.log('loadTxtWorks開始 - 現在の言語:', window.languageManager ? window.languageManager.getCurrentLanguage() : '未設定');
+
         // TxtWorkReaderを使用してtxtファイルから作品情報を読み込み
         const txtReader = new TxtWorkReader();
         const availableWorkIds = await txtReader.getAvailableWorkIds();
@@ -54,16 +56,22 @@ class Portfolio {
 
                 if (txtWorkData) {
                     // txtファイルから新しい作品データを作成
-                    console.log(`作品 ${workId} のタグデータ:`, txtWorkData.tags);
+                    console.log(`作品 ${workId} の読み込みデータ:`, txtWorkData);
+                    console.log(`作品 ${workId} のタイトル:`, txtWorkData.title);
+
+                    // workIdは既にフォルダ名の一部なので、そのまま使用
+                    const folderName = `works-${workId}`;
+
                     const newWork = {
-                        id: workId,
+                        id: txtWorkData.id || workId, // 0.txtのIDフィールドを優先
                         title: txtWorkData.title,
                         client: txtWorkData.client,
                         description: txtWorkData.description,
                         role: 'designer',
                         tags: txtWorkData.tags && txtWorkData.tags.length > 0 ? txtWorkData.tags : ['グラフィックデザイン'], // txtファイルからタグを読み込み
-                        images: [`images/works-${workId}/`],
-                        featured: true
+                        images: [`images/${folderName}/`],
+                        featured: true,
+                        folderName: folderName // フォルダ名を保存
                     };
                     this.works.push(newWork);
                     console.log(`作品 ${workId} をtxtファイルから追加しました:`, newWork);
@@ -112,7 +120,7 @@ class Portfolio {
 
         // Tag click listeners for navigation to all-works page
         document.addEventListener('click', (e) => {
-            if (e.target.classList.contains('clickable-tag')) {
+            if (e.target.classList.contains('clickable-tag') || e.target.classList.contains('tag-btn')) {
                 const tag = e.target.dataset.tag;
                 window.location.href = `all-works.html?tag=${encodeURIComponent(tag)}`;
             }
@@ -242,6 +250,29 @@ class Portfolio {
         return [];
     }
 
+    getRoleWithTooltip(role) {
+        // 役割に応じたツールチップ文言を設定
+        let tooltipText = '';
+        switch (role) {
+            case 'Art Director':
+                tooltipText = 'クライアントと直接やり取りをしながら、案件の進行に関わりつつ、デザインのクオリティを保証する役割。多くの案件で自身も手を動かす。';
+                break;
+            case 'Designer':
+                tooltipText = 'アートディレクターの示す方向性をもとに、手を動かしてアウトプットを制作する役割。';
+                break;
+            case 'Illustrator':
+                tooltipText = 'キャラクターやイラスト表現を制作する役割。';
+                break;
+            case 'Engineer':
+                tooltipText = 'デザインや要件を受けて、実装を担当する役割。';
+                break;
+            default:
+                tooltipText = 'クライアントと直接やり取りをしながら、案件の進行に関わりつつ、デザインのクオリティを保証する役割。多くの案件で自身も手を動かす。';
+        }
+
+        return `<span class="tooltip">${role}<span class="tooltiptext">${tooltipText}</span></span>`;
+    }
+
     getTagCount(tag) {
         return this.works.filter(work => {
             if (Array.isArray(work.tags)) {
@@ -279,8 +310,8 @@ class Portfolio {
                     <h2 class="work-title-vertical">${work.title || 'タイトルなし'}</h2>
                     <div class="work-meta-vertical">
                         <p class="work-client-vertical">${work.client || 'クライアント名なし'}</p>
-                        <p class="work-role-vertical">role: ${this.roles[work.role] || work.role || 'designer'}</p>
-                        <div class="work-tags-vertical">${Array.isArray(work.tags) ? work.tags.map(tag => `<span class="work-tag clickable-tag" data-tag="${tag}">${tag}(${this.getTagCount(tag)})</span>`).join('') : `<span class="work-tag clickable-tag" data-tag="${work.tags || 'デザイン'}">${work.tags || 'デザイン'}(${this.getTagCount(work.tags || 'デザイン')})</span>`}</div>
+                        <p class="work-role-vertical">role: ${this.getRoleWithTooltip(this.roles[work.role] || work.role || 'designer')}</p>
+                        <div class="work-tags-vertical">${Array.isArray(work.tags) ? work.tags.map(tag => `<span class="tag-btn clickable-tag" data-tag="${tag}">${tag}(${this.getTagCount(tag)})</span>`).join('') : `<span class="tag-btn clickable-tag" data-tag="${work.tags || 'デザイン'}">${work.tags || 'デザイン'}(${this.getTagCount(work.tags || 'デザイン')})</span>`}</div>
                     </div>
                 </div>
                 
@@ -380,8 +411,14 @@ document.addEventListener('DOMContentLoaded', () => {
     // ページ読み込み時にスクロール位置を最上部にリセット
     window.scrollTo(0, 0);
 
-    new Portfolio();
+    const portfolio = new Portfolio();
     initBackToTop();
+
+    // 言語変更イベントをリッスン
+    document.addEventListener('languageChanged', () => {
+        console.log('言語が変更されました。ホームページを再読み込みします。');
+        portfolio.init(); // ポートフォリオを再初期化
+    });
 });
 
 

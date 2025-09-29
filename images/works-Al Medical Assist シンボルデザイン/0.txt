@@ -1,0 +1,33 @@
+---
+タグ一覧
+・ロゴ
+・UI/UX
+・ブランディング
+・Web
+・キャラクターデザイン
+・パッケージ
+・イラストレーション
+
+役割一覧
+・Art Director
+・Designer
+・Illustrator
+・Engineer
+---
+
+--- 共通 ---
+ID:al-medical-assist
+
+--- 日本語 ---
+クライアント:日本電気株式会社
+作品名:Al Medical Assist シンボルデザイン
+役割:Art Director
+タグ:ロゴ
+紹介文:日本電気株式会社のAI機能を示すシンボルの作成を担当しました。上下左右対象のシンプルな形状は、安定感や信頼感を喚起しつつ、中心のネガティブスペースでAI機能を表現する十字星を描いています。電子カルテシステムMegaOak/iS(メガオーク アイエス)の複雑なUIの中でも機能することを第一に考えられた、機能性の高いシンボルです。
+
+--- English ---
+Client:NEC Corporation
+Title:Al Medical Assist Symbol Design
+Role:Art Director
+Tags:Logo
+Description:Created a symbol to represent AI functionality for NEC Corporation. The simple symmetrical shape evokes stability and trust while depicting a cross star in the center's negative space to represent AI functionality. This highly functional symbol was designed with priority on working within the complex UI of the electronic medical record system MegaOak/iS.

@@ -30,12 +30,21 @@ class TxtWorkReader {
 
     // txtファイルの内容を解析して作品情報を抽出
     parseWorkText(text) {
+        // 言語管理システムが利用可能な場合は、新しいパーサーを使用
+        if (window.languageManager) {
+            const workInfo = window.languageManager.parseWorkTextWithLanguage(text);
+            return window.languageManager.getWorkInfoForCurrentLanguage(workInfo);
+        }
+
+        // フォールバック: 従来のパーサー
         const lines = text.trim().split('\n');
         const workInfo = {
+            id: '', // IDフィールドを追加
             client: '',
             title: '',
             description: '',
             tags: [],
+            role: '', // 役割フィールドを追加
             rawText: text
         };
 
@@ -43,7 +52,11 @@ class TxtWorkReader {
         for (let line of lines) {
             line = line.trim();
 
-            if (line.startsWith('クライアント:')) {
+            if (line.startsWith('ID:')) {
+                // 固定IDを優先
+                workInfo.id = line.replace('ID:', '').trim();
+                console.log('固定IDを発見:', workInfo.id);
+            } else if (line.startsWith('クライアント:')) {
                 workInfo.client = line.replace('クライアント:', '').trim();
             } else if (line.startsWith('作品名:')) {
                 workInfo.title = line.replace('作品名:', '').trim();
@@ -51,6 +64,9 @@ class TxtWorkReader {
                 const tagsString = line.replace('タグ:', '').trim();
                 workInfo.tags = tagsString.split(',').map(tag => tag.trim());
                 console.log('タグを解析しました:', tagsString, '→', workInfo.tags);
+            } else if (line.startsWith('役割:')) {
+                workInfo.role = line.replace('役割:', '').trim();
+                console.log('役割を解析しました:', workInfo.role);
             } else if (line.startsWith('紹介文:')) {
                 workInfo.description = line.replace('紹介文:', '').trim();
             }
@@ -134,12 +150,27 @@ class TxtWorkReader {
     async getAvailableWorkIds() {
         const workIds = [];
 
-        // works-1からworks-10までチェック
-        for (let i = 1; i <= 10; i++) {
+        // 新しいフォルダ名のリスト
+        const folderNames = [
+            'works-クラフトサケ コーンポター酒 ラベルデザイン',
+            'works-利回りくん キャラクターデザイン',
+            'works-TEAM SKIP SHARE ブランディング',
+            'works-チームビルディング UIUXデザイン',
+            'works-MiRZA ロゴデザイン',
+            'works-Al Medical Assist シンボルデザイン',
+            'works-天然水サーモン ブランディング',
+            'works-クラフトサケブランド 在る 宵 ブランディング',
+            'works-LAKOLE キービジュアルデザイン'
+        ];
+
+        // 各フォルダの0.txtファイルをチェック
+        for (const folderName of folderNames) {
             try {
-                const response = await fetch(`images/works-${i}/0.txt`);
+                const response = await fetch(`images/${folderName}/0.txt`);
                 if (response.ok) {
-                    workIds.push(i);
+                    // フォルダ名からIDを生成（実際のIDは0.txtから読み込まれる）
+                    const workId = folderName.replace('works-', '');
+                    workIds.push(workId);
                 }
             } catch (error) {
                 // ファイルが存在しない場合は無視

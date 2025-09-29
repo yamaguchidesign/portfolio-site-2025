@@ -5,31 +5,201 @@ class AllWorks {
         this.filteredWorks = [];
         this.currentFilter = 'all';
         this.allTags = new Set();
-        this.init();
+        this.init().catch(error => {
+            console.error('Error initializing AllWorks:', error);
+        });
     }
 
-    init() {
-        this.loadWorks();
+    async init() {
+        await this.loadWorks();
         this.extractAllTags();
         this.setupEventListeners();
         this.setupScrollAnimations();
         this.renderTagButtons();
-        this.handleUrlParams();
-        this.renderWorks();
+        await this.handleUrlParams();
     }
 
-    loadWorks() {
+    async loadWorks() {
         console.log('portfolioData available:', typeof portfolioData !== 'undefined');
-        if (typeof portfolioData === 'undefined') {
-            console.error('portfolioData is not defined!');
-            this.works = [];
-        } else {
+
+        // まずdata.jsから作品を読み込み
+        let dataWorks = [];
+        if (typeof portfolioData !== 'undefined') {
             console.log('portfolioData:', portfolioData);
-            this.works = portfolioData.works || [];
+            dataWorks = portfolioData.works || [];
         }
+
+        // 動的にworksフォルダを検出して作品を追加
+        const allWorks = [...dataWorks];
+
+        // 動的フォルダ検出: works-で始まるフォルダを全て検出
+        const detectedWorks = await this.detectWorksFolders();
+
+        // 検出された作品を追加
+        for (const workData of detectedWorks) {
+            // 既存の作品と重複しないかチェック
+            const existingWork = allWorks.find(work => work.id === workData.id);
+            if (!existingWork) {
+                allWorks.push(workData);
+                console.log(`動的に追加された作品 ${workData.id}:`, workData);
+            }
+        }
+
+        this.works = allWorks;
         this.filteredWorks = [...this.works];
         console.log('Loaded works:', this.works.length);
         console.log('Works data:', this.works);
+    }
+
+    async detectWorksFolders() {
+        const detectedWorks = [];
+
+        // 既知のworksフォルダをチェック（数字のみ）
+        for (let i = 1; i <= 20; i++) {
+            try {
+                const response = await fetch(`images/works-${i}/0.txt`);
+                if (response.ok) {
+                    const txtContent = await response.text();
+                    const workData = this.parseWorkText(txtContent, i);
+                    if (workData) {
+                        detectedWorks.push(workData);
+                    }
+                }
+            } catch (error) {
+                // ファイルが存在しない場合は無視
+            }
+        }
+
+        // 動的フォルダ検出: サーバーサイドでフォルダ一覧を取得
+        try {
+            const response = await fetch('images/');
+            if (response.ok) {
+                const html = await response.text();
+                const worksFolders = this.extractWorksFoldersFromHTML(html);
+
+                for (const folderName of worksFolders) {
+                    try {
+                        const response = await fetch(`images/${folderName}/0.txt`);
+                        if (response.ok) {
+                            const txtContent = await response.text();
+                            const workData = this.parseWorkText(txtContent, folderName);
+                            if (workData) {
+                                // 既に追加済みでないかチェック
+                                const existingWork = detectedWorks.find(work => work.id === workData.id);
+                                if (!existingWork) {
+                                    detectedWorks.push(workData);
+                                    console.log(`動的フォルダから検出された作品 ${folderName}:`, workData);
+                                }
+                            }
+                        }
+                    } catch (error) {
+                        // ファイルが存在しない場合は無視
+                    }
+                }
+            }
+        } catch (error) {
+            console.log('動的フォルダ検出に失敗しました:', error);
+        }
+
+        return detectedWorks;
+    }
+
+    extractWorksFoldersFromHTML(html) {
+        // HTMLからworks-で始まるフォルダを抽出
+        const worksFolders = [];
+        const regex = /href="([^"]*works-[^"]*)\/"/g;
+        let match;
+
+        while ((match = regex.exec(html)) !== null) {
+            const folderName = match[1];
+            // works-で始まり、数字のみでないフォルダを抽出
+            if (folderName.startsWith('works-') && !folderName.match(/works-\d+$/)) {
+                worksFolders.push(folderName);
+            }
+        }
+
+        return worksFolders;
+    }
+
+    generateWorkId(folderName) {
+        // フォルダ名から一意のIDを生成
+        // 実際のIDは0.txtファイルのIDフィールドから取得される
+        // この関数はフォルダ名ベースのデフォルトIDを提供
+
+        const match = folderName.match(/works-(\d+)$/);
+        if (match) {
+            return parseInt(match[1]);
+        } else {
+            // 数字でない場合は文字列として扱う
+            return folderName;
+        }
+    }
+
+    parseWorkText(text, folderName) {
+        const lines = text.trim().split('\n');
+        const workInfo = {
+            id: '', // IDフィールドから取得するまで空文字
+            client: '',
+            title: '',
+            description: '',
+            tags: [],
+            role: 'designer',
+            rawText: text,
+            folderName: folderName // フォルダ名を保存
+        };
+
+        // 各行を解析
+        for (let line of lines) {
+            line = line.trim();
+
+            if (line.startsWith('ID:')) {
+                // 固定IDを優先
+                workInfo.id = line.replace('ID:', '').trim();
+                console.log('固定IDを発見:', workInfo.id);
+            } else if (line.startsWith('クライアント:')) {
+                workInfo.client = line.replace('クライアント:', '').trim();
+            } else if (line.startsWith('作品名:')) {
+                workInfo.title = line.replace('作品名:', '').trim();
+            } else if (line.startsWith('タグ:')) {
+                const tagsString = line.replace('タグ:', '').trim();
+                workInfo.tags = tagsString.split(',').map(tag => tag.trim());
+                console.log('タグを解析しました:', tagsString, '→', workInfo.tags);
+            } else if (line.startsWith('紹介文:')) {
+                workInfo.description = line.replace('紹介文:', '').trim();
+            }
+        }
+
+        // IDフィールドが見つからない場合は、フォルダ名から生成
+        if (!workInfo.id) {
+            workInfo.id = this.generateWorkId(folderName);
+            console.log('IDフィールドが見つからないため、フォルダ名から生成:', workInfo.id);
+        }
+
+        // 紹介文が複数行にわたる場合の処理
+        if (!workInfo.description && workInfo.rawText) {
+            // クライアント、作品名、タグ、IDの行を除いた残りを紹介文として扱う
+            const clientLine = lines.find(line => line.trim().startsWith('クライアント:'));
+            const titleLine = lines.find(line => line.trim().startsWith('作品名:'));
+            const tagLine = lines.find(line => line.trim().startsWith('タグ:'));
+            const idLine = lines.find(line => line.trim().startsWith('ID:'));
+
+            const otherLines = lines.filter(line =>
+                line.trim() !== clientLine &&
+                line.trim() !== titleLine &&
+                line.trim() !== tagLine &&
+                line.trim() !== idLine &&
+                line.trim() !== '' &&
+                !line.startsWith('---') &&
+                !line.startsWith('タグ一覧') &&
+                !line.startsWith('・')
+            );
+
+            if (otherLines.length > 0) {
+                workInfo.description = otherLines.join(' ');
+            }
+        }
+
+        return workInfo;
     }
 
     extractAllTags() {
@@ -46,12 +216,12 @@ class AllWorks {
         }).length;
     }
 
-    handleUrlParams() {
+    async handleUrlParams() {
         const urlParams = new URLSearchParams(window.location.search);
         const tagParam = urlParams.get('tag');
 
         if (tagParam && this.allTags.has(tagParam)) {
-            this.filterWorks(tagParam);
+            await this.filterWorks(tagParam);
             // Update the active button
             setTimeout(() => {
                 const activeButton = document.querySelector(`[data-tag="${tagParam}"]`);
@@ -61,23 +231,23 @@ class AllWorks {
             }, 100);
         } else {
             // No tag parameter, show all works
-            this.filterWorks('all');
+            await this.filterWorks('all');
         }
     }
 
     setupEventListeners() {
         // Tag filter buttons and card tags
-        document.addEventListener('click', (e) => {
+        document.addEventListener('click', async (e) => {
             console.log('Click event detected on:', e.target);
-            if (e.target.classList.contains('filter-btn')) {
+            if (e.target.classList.contains('tag-btn') || e.target.classList.contains('filter-btn')) {
                 const tag = e.target.dataset.tag;
-                console.log('Filter button clicked, tag:', tag);
-                this.filterWorks(tag);
+                console.log('Tag button clicked, tag:', tag);
+                await this.filterWorks(tag);
                 this.updateFilterButtons(e.target);
             } else if (e.target.classList.contains('clickable-tag')) {
                 const tag = e.target.dataset.tag;
                 console.log('Card tag clicked, tag:', tag);
-                this.filterWorks(tag);
+                await this.filterWorks(tag);
                 // Update the corresponding filter button
                 const filterButton = document.querySelector(`[data-tag="${tag}"]`);
                 if (filterButton) {
@@ -87,7 +257,7 @@ class AllWorks {
         });
     }
 
-    filterWorks(tag) {
+    async filterWorks(tag) {
         this.currentFilter = tag;
         console.log('Filtering by tag:', tag);
         console.log('Total works:', this.works.length);
@@ -101,12 +271,12 @@ class AllWorks {
         }
 
         console.log('Filtered works:', this.filteredWorks.length);
-        this.renderWorks();
+        await this.renderWorks();
     }
 
     updateFilterButtons(activeButton) {
         // Remove active class from all buttons
-        document.querySelectorAll('.filter-btn').forEach(btn => {
+        document.querySelectorAll('.tag-btn, .filter-btn').forEach(btn => {
             btn.classList.remove('active');
         });
 
@@ -116,20 +286,23 @@ class AllWorks {
 
     renderTagButtons() {
         const tagButtonsContainer = document.getElementById('tagButtons');
-        const sortedTags = Array.from(this.allTags).sort();
         const totalWorks = this.works.length;
+
+        // 指定された順番でタグを並べる
+        const tagOrder = ['ロゴ', 'UI/UX', 'ブランディング', 'Web', 'キャラクターデザイン', 'パッケージ', 'イラストレーション'];
+        const sortedTags = tagOrder.filter(tag => this.allTags.has(tag));
 
         // All button + tag buttons in one block
         tagButtonsContainer.innerHTML = [
-            `<button class="filter-btn active" data-tag="all">All(${totalWorks})</button>`,
+            `<button class="tag-btn active" data-tag="all">All(${totalWorks})</button>`,
             ...sortedTags.map(tag => {
                 const count = this.getTagCount(tag);
-                return `<button class="filter-btn" data-tag="${tag}">${tag}(${count})</button>`;
+                return `<button class="tag-btn" data-tag="${tag}">${tag}(${count})</button>`;
             })
         ].join('');
     }
 
-    renderWorks() {
+    async renderWorks() {
         const worksGrid = document.getElementById('worksGrid');
         console.log('Rendering works, filtered count:', this.filteredWorks.length);
         console.log('Works grid element:', worksGrid);
@@ -146,13 +319,19 @@ class AllWorks {
         }
 
         console.log('Rendering work cards...');
-        const html = this.filteredWorks.map((work, index) => `
-            <div class="work-card" style="animation-delay: ${index * 0.1}s">
+
+        // 各作品のサムネイル画像を取得
+        const worksWithThumbnails = await Promise.all(
+            this.filteredWorks.map(async (work, index) => {
+                const thumbnail = await this.getThumbnailImage(work.id);
+                return { ...work, thumbnail, index };
+            })
+        );
+
+        const html = worksWithThumbnails.map((work) => `
+            <a href="work.html?id=${work.id}" class="work-card" style="animation-delay: ${work.index * 0.1}s">
                 <div class="work-image-container">
-                    <img src="${work.images[0]}" alt="${work.title}" class="work-card-image" loading="lazy">
-                    <div class="work-overlay">
-                        <a href="work.html?id=${work.id}" class="work-link">View Project →</a>
-                    </div>
+                    <img src="${work.thumbnail}" alt="${work.title}" class="work-card-image" loading="lazy">
                 </div>
                 <div class="work-card-content">
                     <h3 class="work-card-title">${work.title}</h3>
@@ -160,12 +339,54 @@ class AllWorks {
                     <p class="work-card-role">role: ${this.getRoleDisplay(work.role)}</p>
                     <div class="work-card-tags">${this.renderWorkTags(work.tags)}</div>
                 </div>
-            </div>
+            </a>
         `).join('');
 
         console.log('Generated HTML length:', html.length);
         worksGrid.innerHTML = html;
         console.log('HTML inserted into worksGrid');
+    }
+
+    async getThumbnailImage(workId) {
+        const imageExtensions = ['png', 'jpg', 'jpeg', 'webp', 'gif', 'svg'];
+
+        // 作品データからフォルダ名を取得
+        const work = this.works.find(w => w.id === workId);
+        const folderName = work ? work.folderName : (typeof workId === 'string' ? workId : `works-${workId}`);
+
+        console.log(`サムネイル検索: ID=${workId}, フォルダ名=${folderName}`);
+
+        // 1桁のパターン: 1.png, 1.jpg など
+        for (const ext of imageExtensions) {
+            const imagePath = `images/${folderName}/1.${ext}`;
+            try {
+                const response = await fetch(imagePath, { method: 'HEAD' });
+                if (response.ok) {
+                    console.log(`サムネイル画像を発見: ${imagePath}`);
+                    return imagePath;
+                }
+            } catch (error) {
+                // ファイルが存在しない場合は次の拡張子を試す
+            }
+        }
+
+        // 2桁のパターン: 01.png, 01.jpg など
+        for (const ext of imageExtensions) {
+            const imagePath = `images/${folderName}/01.${ext}`;
+            try {
+                const response = await fetch(imagePath, { method: 'HEAD' });
+                if (response.ok) {
+                    console.log(`サムネイル画像を発見: ${imagePath}`);
+                    return imagePath;
+                }
+            } catch (error) {
+                // ファイルが存在しない場合は次の拡張子を試す
+            }
+        }
+
+        // 画像が見つからない場合はプレースホルダーを返す
+        console.warn(`作品 ${workId} のサムネイル画像が見つかりません (フォルダ: ${folderName})`);
+        return 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZjhmOGY4Ii8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxNCIgZmlsbD0iIzk5OSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPk5vIEltYWdlPC90ZXh0Pjwvc3ZnPg==';
     }
 
     getRoleDisplay(role) {
@@ -175,14 +396,39 @@ class AllWorks {
             'illustrator': 'Illustrator',
             'engineer': 'Engineer'
         };
-        return roles[role] || role;
+        const displayRole = roles[role] || role;
+        return this.getRoleWithTooltip(displayRole);
+    }
+
+    getRoleWithTooltip(role) {
+        // 役割に応じたツールチップ文言を設定
+        let tooltipText = '';
+        switch (role) {
+            case 'Art Director':
+                tooltipText = 'クライアントと直接やり取りをしながら、案件の進行に関わりつつ、デザインのクオリティを保証する役割。多くの案件で自身も手を動かす。';
+                break;
+            case 'Designer':
+                tooltipText = 'アートディレクターの示す方向性をもとに、手を動かしてアウトプットを制作する役割。';
+                break;
+            case 'Illustrator':
+                tooltipText = 'キャラクターやイラスト表現を制作する役割。';
+                break;
+            case 'Engineer':
+                tooltipText = 'デザインや要件を受けて、実装を担当する役割。';
+                break;
+            default:
+                tooltipText = 'クライアントと直接やり取りをしながら、案件の進行に関わりつつ、デザインのクオリティを保証する役割。多くの案件で自身も手を動かす。';
+        }
+
+        return `<span class="tooltip">${role}<span class="tooltiptext">${tooltipText}</span></span>`;
     }
 
     renderWorkTags(tags) {
         if (!Array.isArray(tags)) return '';
+
         return tags.map(tag => {
             const count = this.getTagCount(tag);
-            return `<span class="work-tag clickable-tag" data-tag="${tag}">${tag}(${count})</span>`;
+            return `<span class="tag-btn clickable-tag" data-tag="${tag}">${tag}(${count})</span>`;
         }).join('');
     }
 
@@ -242,9 +488,14 @@ function initBackToTop() {
 document.addEventListener('DOMContentLoaded', () => {
     console.log('DOM loaded, initializing AllWorks...');
     try {
-        new AllWorks();
+        const allWorks = new AllWorks();
         initBackToTop();
         console.log('AllWorks initialized successfully');
+
+        // 言語変更イベントをリッスン
+        window.addEventListener('languageChanged', () => {
+            allWorks.init(); // AllWorksを再初期化
+        });
     } catch (error) {
         console.error('Error initializing AllWorks:', error);
     }

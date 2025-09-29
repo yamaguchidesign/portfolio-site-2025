@@ -26,6 +26,11 @@ class Sidebar {
 
         return `
             <div class="side-menu-content">
+                <div class="language-switcher">
+                    <button id="languageToggle" class="language-toggle">
+                        <span class="other-lang">JP</span><span>|</span><span class="current-lang">EN</span>
+                    </button>
+                </div>
                 <div class="profile-info">
                     <h1 class="logo">Shohei Yamaguchi</h1>
                     <p class="profile-title">Art Director</p>
@@ -70,6 +75,7 @@ class Sidebar {
         if (sidebar) {
             sidebar.innerHTML = this.getSidebarHTML();
             this.initBackToTop();
+            this.initLanguageToggle();
         }
     }
 
@@ -82,6 +88,54 @@ class Sidebar {
                     behavior: 'smooth'
                 });
             });
+        }
+    }
+
+    initLanguageToggle() {
+        const languageToggle = document.getElementById('languageToggle');
+        console.log('Language toggle button found:', languageToggle);
+        if (languageToggle) {
+            languageToggle.addEventListener('click', () => {
+                console.log('Language toggle clicked');
+                this.toggleLanguage();
+            });
+
+            // 初期化時に現在の言語に応じてボタンの表示を更新
+            const currentLang = localStorage.getItem('language') || 'ja';
+            this.updateLanguageButton(currentLang);
+        } else {
+            console.error('Language toggle button not found');
+        }
+    }
+
+    toggleLanguage() {
+        // 現在の言語を取得（デフォルトは日本語）
+        const currentLang = localStorage.getItem('language') || 'ja';
+        const newLang = currentLang === 'ja' ? 'en' : 'ja';
+
+        console.log('Toggling language from', currentLang, 'to', newLang);
+
+        // 言語設定を保存
+        localStorage.setItem('language', newLang);
+
+        // ボタンの表示を更新
+        this.updateLanguageButton(newLang);
+
+        // 言語変更イベントを発火
+        console.log('Dispatching languageChanged event');
+        document.dispatchEvent(new CustomEvent('languageChanged', {
+            detail: { language: newLang }
+        }));
+    }
+
+    updateLanguageButton(lang) {
+        const languageToggle = document.querySelector('.language-toggle');
+        if (languageToggle) {
+            if (lang === 'ja') {
+                languageToggle.innerHTML = '<span class="current-lang">JP</span><span>|</span><span class="other-lang">EN</span>';
+            } else {
+                languageToggle.innerHTML = '<span class="other-lang">JP</span><span>|</span><span class="current-lang">EN</span>';
+            }
         }
     }
 }

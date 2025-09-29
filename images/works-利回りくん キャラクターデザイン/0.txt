@@ -1,0 +1,33 @@
+---
+タグ一覧
+・ロゴ
+・UI/UX
+・ブランディング
+・Web
+・キャラクターデザイン
+・パッケージ
+・イラストレーション
+
+役割一覧
+・Art Director
+・Designer
+・Illustrator
+・Engineer
+---
+
+--- 共通 ---
+ID:ririkuri-kun
+
+--- 日本語 ---
+クライアント:株式会社シーラ
+作品名:利回りくん キャラクターデザイン
+役割:Art Director
+タグ:キャラクターデザイン
+紹介文:株式会社シーラの少額で始める不動産クラウドファンディング「利回りくん」のキャラクターデザインを担当しました。お金を頬袋に溜め込んでいくリスをモチーフにサービスを表現しています。誰でも始められる親しみやすさを表現すべく、愛らしい表情と体型についてクライアントと議論を重ねながら制作しました。キャラクターに一貫性を持たせるため、プロフィールや性格、言葉遣いを記したキャラクター設計書も納品しています。
+
+--- English ---
+Client:Sheera Inc.
+Title:Ririkuri-kun Character Design
+Role:Art Director
+Tags:Character Design
+Description:Designed the character for "Ririkuri-kun," a real estate crowdfunding service that starts with small amounts by Sheera Inc. We expressed the service using a squirrel motif that accumulates money in its cheek pouches. To express the approachability that anyone can start with, we created it through repeated discussions with the client about the adorable facial expressions and body shape. We also delivered a character design document that includes profiles, personality, and speech patterns to maintain consistency in the character.
