@@ -60,12 +60,44 @@ document.addEventListener('DOMContentLoaded', async function () {
             console.error('言語変更後の再読み込みエラー:', error);
         }
     });
+
+    // エクスポート機能の初期化
+    initExportFunctionality();
 });
 
 // URLパラメータから作品IDを取得
 function getWorkIdFromPage() {
     const urlParams = new URLSearchParams(window.location.search);
     return urlParams.get('id');
+}
+
+// 画像URLを取得
+async function getImageUrls(folderName) {
+    try {
+        const response = await fetch(`images/${folderName}/`);
+        if (!response.ok) {
+            console.error('画像フォルダの読み込みに失敗:', response.status);
+            return [];
+        }
+
+        const html = await response.text();
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, 'text/html');
+        const links = doc.querySelectorAll('a[href]');
+
+        const imageUrls = [];
+        links.forEach(link => {
+            const href = link.getAttribute('href');
+            if (href && /\.(png|jpg|jpeg|gif|webp|svg)$/i.test(href)) {
+                imageUrls.push(`images/${folderName}/${href}`);
+            }
+        });
+
+        return imageUrls;
+    } catch (error) {
+        console.error('画像URL取得エラー:', error);
+        return [];
+    }
 }
 
 // 作品データを動的に読み込み
@@ -89,6 +121,11 @@ async function loadWorkData(workId) {
         const workData = parseWorkText(text);
         workData.id = workId;
         workData.folderName = folderName;
+
+        // 画像データを追加
+        const imageUrls = await getImageUrls(folderName);
+        workData.images = imageUrls;
+        workData.loadedImages = imageUrls;
 
         return workData;
     } catch (error) {
@@ -180,6 +217,281 @@ function parseWorkText(text) {
 
     work.description = work.description.trim();
     return work;
+}
+
+// エクスポート機能の初期化
+function initExportFunctionality() {
+    // ダウンロードボタンのイベントリスナー
+    const downloadBtn = document.getElementById('download-work-png');
+    if (downloadBtn) {
+        downloadBtn.addEventListener('click', handleExportClick);
+    }
+
+    // モーダルのイベントリスナー
+    const closeModalBtn = document.getElementById('close-export-modal');
+    const closeModalBtn2 = document.getElementById('close-modal-btn');
+    const downloadAgainBtn = document.getElementById('download-again-btn');
+
+    if (closeModalBtn) {
+        closeModalBtn.addEventListener('click', closeExportModal);
+    }
+    if (closeModalBtn2) {
+        closeModalBtn2.addEventListener('click', closeExportModal);
+    }
+    if (downloadAgainBtn) {
+        downloadAgainBtn.addEventListener('click', handleExportClick);
+    }
+
+    // オーバーレイクリックでモーダルを閉じる
+    const modal = document.getElementById('export-modal');
+    if (modal) {
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal || e.target.classList.contains('export-modal-overlay')) {
+                closeExportModal();
+            }
+        });
+    }
+}
+
+// エクスポートボタンクリック処理
+async function handleExportClick() {
+    try {
+        // 現在の作品データを取得
+        const workId = getWorkIdFromPage();
+        if (!workId) {
+            alert('作品データが見つかりません。');
+            return;
+        }
+
+        const workData = await loadWorkData(workId);
+        if (!workData) {
+            alert('作品データの読み込みに失敗しました。');
+            return;
+        }
+
+        // モーダルを表示
+        showExportModal();
+
+        // 少し待機してからダウンロード開始
+        setTimeout(async () => {
+            await downloadWorkAsPNG(workData);
+        }, 100);
+
+    } catch (error) {
+        console.error('エクスポートエラー:', error);
+        alert('エクスポートに失敗しました。');
+    }
+}
+
+
+// モーダル表示
+function showExportModal() {
+    const modal = document.getElementById('export-modal');
+    if (modal) {
+        modal.style.display = 'block';
+        document.body.style.overflow = 'hidden';
+    }
+}
+
+// モーダルを閉じる
+function closeExportModal() {
+    const modal = document.getElementById('export-modal');
+    if (modal) {
+        modal.style.display = 'none';
+        document.body.style.overflow = '';
+    }
+}
+
+
+// PNGダウンロード機能（Canvas API使用 - 完全版）
+async function downloadWorkAsPNG(workData) {
+    try {
+
+        // Canvas要素を作成
+        const canvas = document.createElement('canvas');
+        canvas.width = 1920;
+        canvas.height = 1080;
+        const ctx = canvas.getContext('2d');
+
+        // 背景を白で塗りつぶし
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(0, 0, 1920, 1080);
+
+        // テキスト情報を準備
+        const title = workData.title ? workData.title.substring(0, 30) : 'タイトルなし';
+        const client = workData.client || 'クライアント名なし';
+        const description = workData.description ? workData.description.substring(0, 250) : '説明がありません。';
+
+        // レイアウト設定
+        const padding = 56;
+        const contentWidth = 1920 - (padding * 2);
+        const contentHeight = 1080 - (padding * 2);
+
+        // クライアント名描画（タイトルの上）
+        ctx.font = '24px Arial, sans-serif';
+        ctx.fillStyle = '#666666';
+        ctx.textAlign = 'left';
+        ctx.textBaseline = 'top';
+        ctx.fillText(client, padding, padding);
+
+        // タイトル描画
+        ctx.font = 'bold 40px Arial, sans-serif';
+        ctx.fillStyle = '#333333';
+        ctx.fillText(title, padding, padding + 40 + 12); // 上マージン8px追加
+
+        // 説明文描画（複数行対応・文字単位折り返し）
+        ctx.font = '24px Arial, sans-serif';
+        ctx.fillStyle = '#333333';
+        const lineHeight = 1.5 * 24;
+        const maxWidth = contentWidth; // パディング内の最大幅（画像用スペースを削除）
+        let y = padding + 100 + 16; // タイトル位置の調整に合わせて変更 + 上マージン8px
+
+        // 文字単位で折り返し処理
+        let currentLine = '';
+        for (let i = 0; i < description.length; i++) {
+            const char = description[i];
+            const testLine = currentLine + char;
+            const metrics = ctx.measureText(testLine);
+
+            if (metrics.width > maxWidth && currentLine.length > 0) {
+                // 現在の行を描画して次の行へ
+                ctx.fillText(currentLine, padding, y);
+                currentLine = char;
+                y += lineHeight;
+                if (y > padding + 260) break; // 最大高さ制限
+            } else {
+                currentLine = testLine;
+            }
+        }
+
+        // 最後の行を描画
+        if (currentLine && y <= padding + 260) {
+            ctx.fillText(currentLine, padding, y);
+        }
+
+        // 画像描画（最大5枚）
+        const images = workData.loadedImages || workData.images || workData.imageUrls || [];
+
+        if (images.length > 0) {
+            const imageCount = Math.min(images.length, 5);
+
+            // 1枚目の画像（4:3アスペクト比、幅967px）
+            const firstImageWidth = 967;
+            const firstImageHeight = Math.round(firstImageWidth * 3 / 4); // 4:3のアスペクト比
+            const firstImageX = padding;
+            const firstImageY = 1080 - padding - firstImageHeight; // 画面下端に配置
+
+            // 右側の画像用スペース計算（2×2グリッド、16px間隔）
+            const gridSpacing = 16; // 画像間のスペース
+            const rightImagesX = firstImageX + firstImageWidth + gridSpacing; // 1枚目の右側
+            const rightImagesWidth = 1920 - padding - rightImagesX; // 残りの幅
+            const rightImagesHeight = firstImageHeight; // 1枚目と同じ高さ
+            const gridImageWidth = Math.floor((rightImagesWidth - gridSpacing) / 2); // 2列、スペースを考慮
+            const gridImageHeight = Math.floor((rightImagesHeight - gridSpacing) / 2); // 2行、スペースを考慮
+
+            for (let i = 0; i < imageCount; i++) {
+                try {
+                    const img = new Image();
+
+                    await new Promise((resolve, reject) => {
+                        img.onload = () => {
+                            if (i === 0) {
+                                // 1枚目：5:3アスペクト比で左端に配置
+                                const imgAspectRatio = img.width / img.height;
+                                const targetAspectRatio = firstImageWidth / firstImageHeight;
+
+                                let sourceX, sourceY, sourceWidth, sourceHeight;
+
+                                if (imgAspectRatio > targetAspectRatio) {
+                                    // 画像が横長：上下をクロップ
+                                    sourceHeight = img.height;
+                                    sourceWidth = img.height * targetAspectRatio;
+                                    sourceX = (img.width - sourceWidth) / 2;
+                                    sourceY = 0;
+                                } else {
+                                    // 画像が縦長：左右をクロップ
+                                    sourceWidth = img.width;
+                                    sourceHeight = img.width / targetAspectRatio;
+                                    sourceX = 0;
+                                    sourceY = (img.height - sourceHeight) / 2;
+                                }
+
+                                ctx.drawImage(
+                                    img,
+                                    sourceX, sourceY, sourceWidth, sourceHeight,
+                                    firstImageX, firstImageY, firstImageWidth, firstImageHeight
+                                );
+                            } else {
+                                // 2枚目以降：Zの字順で2×2グリッドに配置
+                                // ②③
+                                // ④⑤
+                                const gridIndex = i - 1; // 0, 1, 2, 3
+                                const col = gridIndex % 2; // 0, 1, 0, 1
+                                const row = Math.floor(gridIndex / 2); // 0, 0, 1, 1
+
+                                const x = rightImagesX + (col * (gridImageWidth + gridSpacing));
+                                const y = firstImageY + (row * (gridImageHeight + gridSpacing));
+
+                                // 画像をcover表示
+                                const imgAspectRatio = img.width / img.height;
+                                const targetAspectRatio = gridImageWidth / gridImageHeight;
+
+                                let sourceX, sourceY, sourceWidth, sourceHeight;
+
+                                if (imgAspectRatio > targetAspectRatio) {
+                                    sourceHeight = img.height;
+                                    sourceWidth = img.height * targetAspectRatio;
+                                    sourceX = (img.width - sourceWidth) / 2;
+                                    sourceY = 0;
+                                } else {
+                                    sourceWidth = img.width;
+                                    sourceHeight = img.width / targetAspectRatio;
+                                    sourceX = 0;
+                                    sourceY = (img.height - sourceHeight) / 2;
+                                }
+
+                                ctx.drawImage(
+                                    img,
+                                    sourceX, sourceY, sourceWidth, sourceHeight,
+                                    x, y, gridImageWidth, gridImageHeight
+                                );
+                            }
+                            resolve();
+                        };
+                        img.onerror = reject;
+                        img.src = images[i];
+                    });
+                } catch (error) {
+                    console.warn(`画像 ${i + 1} の読み込みに失敗:`, error);
+                }
+            }
+        }
+
+        // CanvasをDataURLに変換
+        const dataUrl = canvas.toDataURL('image/png');
+
+        // プレビュー画像を更新
+        const preview = document.getElementById('export-preview');
+        if (preview) {
+            const img = document.createElement('img');
+            img.src = dataUrl;
+            img.alt = 'プレビュー';
+            img.style.cssText = 'width: 100%; height: auto; max-width: 100%; max-height: 60vh; border: 1px solid #ddd; border-radius: 8px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); display: block; object-fit: contain;';
+
+            preview.innerHTML = '';
+            preview.appendChild(img);
+        }
+
+        // ダウンロード
+        const link = document.createElement('a');
+        link.download = `${workData.title || 'work'}.png`;
+        link.href = dataUrl;
+        link.click();
+
+    } catch (error) {
+        console.error('PNG生成エラー:', error);
+        alert('画像の生成に失敗しました: ' + error.message);
+    }
 }
 
 // 作品ページをレンダリング

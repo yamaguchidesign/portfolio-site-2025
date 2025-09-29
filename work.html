@@ -41,13 +41,45 @@
                 <div class="work-description">
                     <p>Loading...</p>
                 </div>
+                <div class="work-actions">
+                    <button id="download-work-png" class="download-work-btn">実績をPNGでダウンロード</button>
+                </div>
             </div>
         </section>
     </main>
 
+    <!-- 書き出し用DOM（画面外に配置） -->
+    <div id="export-container"
+        style="visibility: hidden; position: absolute; top: -9999px; left: -9999px; width: 1920px; height: 1080px; background: #ffffff; padding: 80px; box-sizing: border-box;">
+        <div id="export-content">
+            <!-- ここに作品情報を動的に挿入 -->
+        </div>
+    </div>
+
+    <!-- エクスポートモーダル -->
+    <div id="export-modal" class="export-modal" style="display: none;">
+        <div class="export-modal-overlay"></div>
+        <div class="export-modal-content">
+            <div class="export-modal-header">
+                <h3>実績画像プレビュー</h3>
+                <button id="close-export-modal" class="close-btn">&times;</button>
+            </div>
+            <div class="export-modal-body">
+                <div id="export-preview" class="export-preview">
+                    <!-- プレビュー画像がここに表示される -->
+                </div>
+                <div class="export-actions">
+                    <button id="download-again-btn" class="download-btn">再ダウンロード</button>
+                    <button id="close-modal-btn" class="close-modal-btn">閉じる</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="language-manager.js"></script>
     <script src="sidebar.js"></script>
     <script src="data.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html-to-image/1.11.11/html-to-image.min.js"></script>
     <script src="universal-work-script.js"></script>
 </body>
 
