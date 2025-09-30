@@ -1,0 +1,33 @@
+---
+タグ一覧
+・ロゴ
+・UI/UX
+・ブランディング
+・Web
+・キャラクターデザイン
+・パッケージ
+・イラストレーション
+
+役割一覧
+・Art Director
+・Designer
+・Illustrator
+・Engineer
+---
+
+--- 共通 ---
+ID:hix
+
+--- 日本語 ---
+クライアント:株式会社エムボックス
+作品名:AGA対策アプリ「HIX」UI/UX
+役割:Designer
+タグ:UI/UX,Web
+紹介文:AGA対策アプリ「HIX」のブランドデザインとUI/UXデザインのリニューアルを担当しました。「HIX」の特徴である、アプリとミノキシジルの連携を表現するために、モデルの回転に合わせてメッセージが切り替わるビジュアルを作成。イラストやブランドカラーなども合わせてデザインし、サービス全体のブランディングを行いました。アプリでは、AGAの進行状況のチェックから、個人に合った対策の紹介など、ひとりひとりのAGAの悩みに向き合えるようにUI/UXの改善を行っています。
+
+--- English ---
+Client:Adastria Co., Ltd.
+Title:LAKOLE Key Visual Design
+Role:Art Director
+Tags:Illustration
+Description:Created the key visual for the lifestyle brand "LAKOLE (Rakore)." To convey the message that "if you go to Rakore, you can get everything you want 'this and that' all in one place for a stylish life," we developed the visual around the memorable phrase "Kore, Rakore." The graphic expresses how a couple with different tastes share the same space while using their favorite Rakore products, communicating the brand's wide range of products. The logo created to match this key visual is also used on the website and in commercials.

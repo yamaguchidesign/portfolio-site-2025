@@ -1,0 +1,33 @@
+---
+タグ一覧
+・ロゴ
+・UI/UX
+・ブランディング
+・Web
+・キャラクターデザイン
+・パッケージ
+・イラストレーション
+
+役割一覧
+・Art Director
+・Designer
+・Illustrator
+・Engineer
+---
+
+--- 共通 ---
+ID:yozakura-noh
+
+--- 日本語 ---
+クライアント:一般社団法人夜桜能
+作品名:夜桜能 Webサイト
+役割:Designer
+タグ:UI/UX,Web
+紹介文:一般社団法人夜桜能が主催する、夜桜と共に能を楽しめるイベント「夜桜能」の公式サイトのWebデザイン、Studio実装を担当しました。体一つで情景を浮かび上がらせる能にも通じる、引き算の美を表現すべく、装飾のほとんどない洗練されたデザインに仕上げました。トップページでは、3DCGで制作した桜の花びらが舞う演出を施しています。
+
+--- English ---
+Client:General Incorporated Association Yozakura Noh
+Title:Yozakura Noh Website
+Role:Designer
+Tags:UI/UX,Web
+Description:Designed and implemented the official website for "Yozakura Noh," an event hosted by the General Incorporated Association Yozakura Noh where visitors can enjoy Noh theater performances alongside cherry blossoms at night. The design embodies the beauty of subtraction, similar to how Noh theater uses the body alone to evoke scenes, resulting in a refined design with minimal decoration. The top page features a 3D CG animation of falling cherry blossom petals.
