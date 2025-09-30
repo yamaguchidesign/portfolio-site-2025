@@ -150,17 +150,23 @@ class TxtWorkReader {
     async getAvailableWorkIds() {
         const workIds = [];
 
-        // 新しいフォルダ名のリスト
+        // 新しいIDベースのフォルダ名のリスト
         const folderNames = [
-            'works-クラフトサケ コーンポター酒 ラベルデザイン',
-            'works-利回りくん キャラクターデザイン',
-            'works-TEAM SKIP SHARE ブランディング',
-            'works-チームビルディング UIUXデザイン',
-            'works-MiRZA ロゴデザイン',
-            'works-Al Medical Assist シンボルデザイン',
-            'works-天然水サーモン ブランディング',
-            'works-クラフトサケブランド 在る 宵 ブランディング',
-            'works-LAKOLE キービジュアルデザイン'
+            'works-al-medical-assist',
+            'works-aru-yoi-sake',
+            'works-cornpotter-sake',
+            'works-hix',
+            'works-joy-planet',
+            'works-lakole-keyvisual',
+            'works-mirza-logo',
+            'works-natural-water-salmon',
+            'works-otomo',
+            'works-peace-lily',
+            'works-relic-square',
+            'works-ririkuri-kun',
+            'works-team-building-ui',
+            'works-team-skip-share',
+            'works-yozakura-noh'
         ];
 
         // 各フォルダの0.txtファイルをチェック

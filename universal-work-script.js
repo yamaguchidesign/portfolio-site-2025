@@ -239,7 +239,7 @@ function initExportFunctionality() {
         closeModalBtn2.addEventListener('click', closeExportModal);
     }
     if (downloadAgainBtn) {
-        downloadAgainBtn.addEventListener('click', handleExportClick);
+        downloadAgainBtn.addEventListener('click', downloadPNG);
     }
 
     // オーバーレイクリックでモーダルを閉じる
@@ -253,7 +253,11 @@ function initExportFunctionality() {
     }
 }
 
-// エクスポートボタンクリック処理
+// グローバル変数として現在の作品データとCanvasのDataURLを保存
+let currentWorkData = null;
+let currentDataUrl = null;
+
+// エクスポートボタンクリック処理（プレビューのみ表示、ダウンロードはしない）
 async function handleExportClick() {
     try {
         // 現在の作品データを取得
@@ -269,12 +273,15 @@ async function handleExportClick() {
             return;
         }
 
+        // 作品データを保存
+        currentWorkData = workData;
+
         // モーダルを表示
         showExportModal();
 
-        // 少し待機してからダウンロード開始
+        // 少し待機してからプレビュー生成（ダウンロードはしない）
         setTimeout(async () => {
-            await downloadWorkAsPNG(workData);
+            await generatePreview(workData);
         }, 100);
 
     } catch (error) {
@@ -303,10 +310,189 @@ function closeExportModal() {
 }
 
 
-// PNGダウンロード機能（Canvas API使用 - 完全版）
-async function downloadWorkAsPNG(workData) {
-    try {
+// 3枚用レイアウト描画関数
+async function drawThreeImageLayout(ctx, images, padding, gridSpacing) {
+    // 1枚目の画像（左側、大きめ）- 5:3アスペクト比
+    const firstImageWidth = 1208;
+    const firstImageHeight = 725; // 5:3のアスペクト比
+    const firstImageX = padding;
+    const firstImageY = 1080 - padding - firstImageHeight; // 画面下端に配置
 
+    // 右側の画像用スペース計算（縦並び）
+    const rightImagesX = firstImageX + firstImageWidth + gridSpacing; // 1枚目の右側
+    const rightImagesWidth = 1920 - padding - rightImagesX; // 残りの幅
+    const rightImagesHeight = firstImageHeight; // 1枚目と同じ高さ
+    const rightImageWidth = rightImagesWidth; // 右側の画像幅
+    const rightImageHeight = Math.floor((rightImagesHeight - gridSpacing) / 2); // 2枚で縦に分割
+
+    for (let i = 0; i < Math.min(images.length, 3); i++) {
+        try {
+            const img = new Image();
+
+            await new Promise((resolve, reject) => {
+                img.onload = () => {
+                    if (i === 0) {
+                        // 1枚目：左側に大きく配置
+                        const imgAspectRatio = img.width / img.height;
+                        const targetAspectRatio = firstImageWidth / firstImageHeight;
+
+                        let sourceX, sourceY, sourceWidth, sourceHeight;
+
+                        if (imgAspectRatio > targetAspectRatio) {
+                            // 画像が横長：上下をクロップ
+                            sourceHeight = img.height;
+                            sourceWidth = img.height * targetAspectRatio;
+                            sourceX = (img.width - sourceWidth) / 2;
+                            sourceY = 0;
+                        } else {
+                            // 画像が縦長：左右をクロップ
+                            sourceWidth = img.width;
+                            sourceHeight = img.width / targetAspectRatio;
+                            sourceX = 0;
+                            sourceY = (img.height - sourceHeight) / 2;
+                        }
+
+                        ctx.drawImage(
+                            img,
+                            sourceX, sourceY, sourceWidth, sourceHeight,
+                            firstImageX, firstImageY, firstImageWidth, firstImageHeight
+                        );
+                    } else {
+                        // 2-3枚目：右側に縦並びで配置
+                        const x = rightImagesX;
+                        const y = firstImageY + ((i - 1) * (rightImageHeight + gridSpacing));
+
+                        // 画像をcover表示
+                        const imgAspectRatio = img.width / img.height;
+                        const targetAspectRatio = rightImageWidth / rightImageHeight;
+
+                        let sourceX, sourceY, sourceWidth, sourceHeight;
+
+                        if (imgAspectRatio > targetAspectRatio) {
+                            sourceHeight = img.height;
+                            sourceWidth = img.height * targetAspectRatio;
+                            sourceX = (img.width - sourceWidth) / 2;
+                            sourceY = 0;
+                        } else {
+                            sourceWidth = img.width;
+                            sourceHeight = img.width / targetAspectRatio;
+                            sourceX = 0;
+                            sourceY = (img.height - sourceHeight) / 2;
+                        }
+
+                        ctx.drawImage(
+                            img,
+                            sourceX, sourceY, sourceWidth, sourceHeight,
+                            x, y, rightImageWidth, rightImageHeight
+                        );
+                    }
+                    resolve();
+                };
+                img.onerror = reject;
+                img.src = images[i];
+            });
+        } catch (error) {
+            console.warn(`画像 ${i + 1} の読み込みに失敗:`, error);
+        }
+    }
+}
+
+// 5枚用レイアウト描画関数（既存のロジック）
+async function drawFiveImageLayout(ctx, images, padding, gridSpacing, imageCount) {
+    // 1枚目の画像（4:3アスペクト比、幅967px）
+    const firstImageWidth = 967;
+    const firstImageHeight = Math.round(firstImageWidth * 3 / 4); // 4:3のアスペクト比
+    const firstImageX = padding;
+    const firstImageY = 1080 - padding - firstImageHeight; // 画面下端に配置
+
+    // 右側の画像用スペース計算（2×2グリッド、16px間隔）
+    const rightImagesX = firstImageX + firstImageWidth + gridSpacing; // 1枚目の右側
+    const rightImagesWidth = 1920 - padding - rightImagesX; // 残りの幅
+    const rightImagesHeight = firstImageHeight; // 1枚目と同じ高さ
+    const gridImageWidth = Math.floor((rightImagesWidth - gridSpacing) / 2); // 2列、スペースを考慮
+    const gridImageHeight = Math.floor((rightImagesHeight - gridSpacing) / 2); // 2行、スペースを考慮
+
+    for (let i = 0; i < imageCount; i++) {
+        try {
+            const img = new Image();
+
+            await new Promise((resolve, reject) => {
+                img.onload = () => {
+                    if (i === 0) {
+                        // 1枚目：5:3アスペクト比で左端に配置
+                        const imgAspectRatio = img.width / img.height;
+                        const targetAspectRatio = firstImageWidth / firstImageHeight;
+
+                        let sourceX, sourceY, sourceWidth, sourceHeight;
+
+                        if (imgAspectRatio > targetAspectRatio) {
+                            // 画像が横長：上下をクロップ
+                            sourceHeight = img.height;
+                            sourceWidth = img.height * targetAspectRatio;
+                            sourceX = (img.width - sourceWidth) / 2;
+                            sourceY = 0;
+                        } else {
+                            // 画像が縦長：左右をクロップ
+                            sourceWidth = img.width;
+                            sourceHeight = img.width / targetAspectRatio;
+                            sourceX = 0;
+                            sourceY = (img.height - sourceHeight) / 2;
+                        }
+
+                        ctx.drawImage(
+                            img,
+                            sourceX, sourceY, sourceWidth, sourceHeight,
+                            firstImageX, firstImageY, firstImageWidth, firstImageHeight
+                        );
+                    } else {
+                        // 2枚目以降：Zの字順で2×2グリッドに配置
+                        // ②③
+                        // ④⑤
+                        const gridIndex = i - 1; // 0, 1, 2, 3
+                        const col = gridIndex % 2; // 0, 1, 0, 1
+                        const row = Math.floor(gridIndex / 2); // 0, 0, 1, 1
+
+                        const x = rightImagesX + (col * (gridImageWidth + gridSpacing));
+                        const y = firstImageY + (row * (gridImageHeight + gridSpacing));
+
+                        // 画像をcover表示
+                        const imgAspectRatio = img.width / img.height;
+                        const targetAspectRatio = gridImageWidth / gridImageHeight;
+
+                        let sourceX, sourceY, sourceWidth, sourceHeight;
+
+                        if (imgAspectRatio > targetAspectRatio) {
+                            sourceHeight = img.height;
+                            sourceWidth = img.height * targetAspectRatio;
+                            sourceX = (img.width - sourceWidth) / 2;
+                            sourceY = 0;
+                        } else {
+                            sourceWidth = img.width;
+                            sourceHeight = img.width / targetAspectRatio;
+                            sourceX = 0;
+                            sourceY = (img.height - sourceHeight) / 2;
+                        }
+
+                        ctx.drawImage(
+                            img,
+                            sourceX, sourceY, sourceWidth, sourceHeight,
+                            x, y, gridImageWidth, gridImageHeight
+                        );
+                    }
+                    resolve();
+                };
+                img.onerror = reject;
+                img.src = images[i];
+            });
+        } catch (error) {
+            console.warn(`画像 ${i + 1} の読み込みに失敗:`, error);
+        }
+    }
+}
+
+// プレビュー生成関数（ダウンロードはしない）
+async function generatePreview(workData) {
+    try {
         // Canvas要素を作成
         const canvas = document.createElement('canvas');
         canvas.width = 1920;
@@ -369,106 +555,27 @@ async function downloadWorkAsPNG(workData) {
             ctx.fillText(currentLine, padding, y);
         }
 
-        // 画像描画（最大5枚）
+        // 画像描画（枚数に応じてレイアウトを変更）
         const images = workData.loadedImages || workData.images || workData.imageUrls || [];
 
         if (images.length > 0) {
             const imageCount = Math.min(images.length, 5);
-
-            // 1枚目の画像（4:3アスペクト比、幅967px）
-            const firstImageWidth = 967;
-            const firstImageHeight = Math.round(firstImageWidth * 3 / 4); // 4:3のアスペクト比
-            const firstImageX = padding;
-            const firstImageY = 1080 - padding - firstImageHeight; // 画面下端に配置
-
-            // 右側の画像用スペース計算（2×2グリッド、16px間隔）
             const gridSpacing = 16; // 画像間のスペース
-            const rightImagesX = firstImageX + firstImageWidth + gridSpacing; // 1枚目の右側
-            const rightImagesWidth = 1920 - padding - rightImagesX; // 残りの幅
-            const rightImagesHeight = firstImageHeight; // 1枚目と同じ高さ
-            const gridImageWidth = Math.floor((rightImagesWidth - gridSpacing) / 2); // 2列、スペースを考慮
-            const gridImageHeight = Math.floor((rightImagesHeight - gridSpacing) / 2); // 2行、スペースを考慮
 
-            for (let i = 0; i < imageCount; i++) {
-                try {
-                    const img = new Image();
-
-                    await new Promise((resolve, reject) => {
-                        img.onload = () => {
-                            if (i === 0) {
-                                // 1枚目：5:3アスペクト比で左端に配置
-                                const imgAspectRatio = img.width / img.height;
-                                const targetAspectRatio = firstImageWidth / firstImageHeight;
-
-                                let sourceX, sourceY, sourceWidth, sourceHeight;
-
-                                if (imgAspectRatio > targetAspectRatio) {
-                                    // 画像が横長：上下をクロップ
-                                    sourceHeight = img.height;
-                                    sourceWidth = img.height * targetAspectRatio;
-                                    sourceX = (img.width - sourceWidth) / 2;
-                                    sourceY = 0;
-                                } else {
-                                    // 画像が縦長：左右をクロップ
-                                    sourceWidth = img.width;
-                                    sourceHeight = img.width / targetAspectRatio;
-                                    sourceX = 0;
-                                    sourceY = (img.height - sourceHeight) / 2;
-                                }
-
-                                ctx.drawImage(
-                                    img,
-                                    sourceX, sourceY, sourceWidth, sourceHeight,
-                                    firstImageX, firstImageY, firstImageWidth, firstImageHeight
-                                );
-                            } else {
-                                // 2枚目以降：Zの字順で2×2グリッドに配置
-                                // ②③
-                                // ④⑤
-                                const gridIndex = i - 1; // 0, 1, 2, 3
-                                const col = gridIndex % 2; // 0, 1, 0, 1
-                                const row = Math.floor(gridIndex / 2); // 0, 0, 1, 1
-
-                                const x = rightImagesX + (col * (gridImageWidth + gridSpacing));
-                                const y = firstImageY + (row * (gridImageHeight + gridSpacing));
-
-                                // 画像をcover表示
-                                const imgAspectRatio = img.width / img.height;
-                                const targetAspectRatio = gridImageWidth / gridImageHeight;
-
-                                let sourceX, sourceY, sourceWidth, sourceHeight;
-
-                                if (imgAspectRatio > targetAspectRatio) {
-                                    sourceHeight = img.height;
-                                    sourceWidth = img.height * targetAspectRatio;
-                                    sourceX = (img.width - sourceWidth) / 2;
-                                    sourceY = 0;
-                                } else {
-                                    sourceWidth = img.width;
-                                    sourceHeight = img.width / targetAspectRatio;
-                                    sourceX = 0;
-                                    sourceY = (img.height - sourceHeight) / 2;
-                                }
-
-                                ctx.drawImage(
-                                    img,
-                                    sourceX, sourceY, sourceWidth, sourceHeight,
-                                    x, y, gridImageWidth, gridImageHeight
-                                );
-                            }
-                            resolve();
-                        };
-                        img.onerror = reject;
-                        img.src = images[i];
-                    });
-                } catch (error) {
-                    console.warn(`画像 ${i + 1} の読み込みに失敗:`, error);
-                }
+            if (imageCount === 3) {
+                // 3枚用レイアウト：1枚目左大、2-3枚目右縦並び
+                await drawThreeImageLayout(ctx, images, padding, gridSpacing);
+            } else {
+                // 5枚用レイアウト（既存）
+                await drawFiveImageLayout(ctx, images, padding, gridSpacing, imageCount);
             }
         }
 
         // CanvasをDataURLに変換
         const dataUrl = canvas.toDataURL('image/png');
+
+        // グローバル変数に保存（後でダウンロード時に使用）
+        currentDataUrl = dataUrl;
 
         // プレビュー画像を更新
         const preview = document.getElementById('export-preview');
@@ -482,15 +589,32 @@ async function downloadWorkAsPNG(workData) {
             preview.appendChild(img);
         }
 
-        // ダウンロード
-        const link = document.createElement('a');
-        link.download = `${workData.title || 'work'}.png`;
-        link.href = dataUrl;
-        link.click();
+        // ダウンロードはしない
 
     } catch (error) {
         console.error('PNG生成エラー:', error);
         alert('画像の生成に失敗しました: ' + error.message);
+    }
+}
+
+// 実際のダウンロード処理（モーダル内のボタンから呼ばれる）
+function downloadPNG() {
+    if (!currentDataUrl || !currentWorkData) {
+        alert('プレビューデータがありません。');
+        return;
+    }
+
+    try {
+        // ダウンロード
+        const link = document.createElement('a');
+        link.download = `${currentWorkData.title || 'work'}.png`;
+        link.href = currentDataUrl;
+        link.click();
+
+        console.log('ダウンロードを開始しました。');
+    } catch (error) {
+        console.error('ダウンロードエラー:', error);
+        alert('ダウンロードに失敗しました: ' + error.message);
     }
 }
 
