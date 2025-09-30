@@ -583,7 +583,7 @@ async function generatePreview(workData) {
             const img = document.createElement('img');
             img.src = dataUrl;
             img.alt = 'プレビュー';
-            img.style.cssText = 'width: 100%; height: auto; max-width: 100%; max-height: 60vh; border: 1px solid #ddd; border-radius: 8px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); display: block; object-fit: contain;';
+            // CSSファイルのスタイルを使用（インラインスタイルは削除）
 
             preview.innerHTML = '';
             preview.appendChild(img);
