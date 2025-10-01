@@ -25,7 +25,12 @@ class Sidebar {
         const navLinks = this.getNavLinks();
 
         return `
-            <div class="side-menu-content">
+            <button class="hamburger-btn" id="hamburgerBtn" aria-label="メニュー">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <div class="side-menu-content" id="sideMenuContent">
                 <div class="language-switcher">
                     <button id="langJP" class="lang-btn" data-lang="ja">JP</button>
                     <span class="lang-separator">|</span>
@@ -76,6 +81,7 @@ class Sidebar {
             sidebar.innerHTML = this.getSidebarHTML();
             this.initBackToTop();
             this.initLanguageToggle();
+            this.initHamburgerMenu();
         }
     }
 
@@ -150,6 +156,36 @@ class Sidebar {
                 langENBtn.classList.add('active');
                 langENBtn.disabled = true;
             }
+        }
+    }
+
+    initHamburgerMenu() {
+        const hamburgerBtn = document.getElementById('hamburgerBtn');
+        const sideMenuContent = document.getElementById('sideMenuContent');
+        const sidebar = document.querySelector('.side-menu');
+
+        if (hamburgerBtn && sideMenuContent) {
+            hamburgerBtn.addEventListener('click', () => {
+                sidebar.classList.toggle('menu-open');
+                hamburgerBtn.classList.toggle('active');
+            });
+
+            // メニュー外をクリックしたら閉じる
+            document.addEventListener('click', (e) => {
+                if (!sidebar.contains(e.target)) {
+                    sidebar.classList.remove('menu-open');
+                    hamburgerBtn.classList.remove('active');
+                }
+            });
+
+            // メニュー内のリンクをクリックしたら閉じる
+            const navLinks = sideMenuContent.querySelectorAll('.nav-link');
+            navLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    sidebar.classList.remove('menu-open');
+                    hamburgerBtn.classList.remove('active');
+                });
+            });
         }
     }
 }
