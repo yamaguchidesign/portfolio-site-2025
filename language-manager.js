@@ -63,6 +63,7 @@ class LanguageManager {
         const lines = text.trim().split('\n');
         const workInfo = {
             id: '',
+            priority: null,
             japanese: {
                 client: '',
                 title: '',
@@ -100,6 +101,9 @@ class LanguageManager {
             if (currentSection === 'common') {
                 if (line.startsWith('ID:')) {
                     workInfo.id = line.replace('ID:', '').trim();
+                } else if (line.startsWith('Priority:')) {
+                    const priorityStr = line.replace('Priority:', '').trim();
+                    workInfo.priority = parseInt(priorityStr, 10);
                 }
             } else if (currentSection === 'japanese') {
                 if (line.startsWith('クライアント:')) {
@@ -140,6 +144,7 @@ class LanguageManager {
 
         return {
             id: workInfo.id,
+            priority: workInfo.priority,
             client: source.client,
             title: source.title,
             role: source.role,
@@ -151,4 +156,3 @@ class LanguageManager {
 
 // グローバルインスタンス
 window.languageManager = new LanguageManager();
-console.log('LanguageManager initialized:', window.languageManager);

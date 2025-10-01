@@ -15,7 +15,6 @@ class TxtWorkReader {
                 if (response.ok) {
                     const text = await response.text();
                     this.workData = this.parseWorkText(text);
-                    console.log(`txtファイルを読み込みました: works-${workId}/${fileName}`);
                     return this.workData;
                 }
             } catch (error) {
@@ -24,7 +23,6 @@ class TxtWorkReader {
             }
         }
 
-        console.error(`txtファイルが見つかりません: works-${workId}/ (${possibleFileNames.join(', ')} を試行)`);
         return null;
     }
 
@@ -45,6 +43,7 @@ class TxtWorkReader {
             description: '',
             tags: [],
             role: '', // 役割フィールドを追加
+            priority: null, // 優先度フィールドを追加
             rawText: text
         };
 
@@ -55,7 +54,9 @@ class TxtWorkReader {
             if (line.startsWith('ID:')) {
                 // 固定IDを優先
                 workInfo.id = line.replace('ID:', '').trim();
-                console.log('固定IDを発見:', workInfo.id);
+            } else if (line.startsWith('Priority:')) {
+                const priorityStr = line.replace('Priority:', '').trim();
+                workInfo.priority = parseInt(priorityStr, 10);
             } else if (line.startsWith('クライアント:')) {
                 workInfo.client = line.replace('クライアント:', '').trim();
             } else if (line.startsWith('作品名:')) {
@@ -63,10 +64,8 @@ class TxtWorkReader {
             } else if (line.startsWith('タグ:')) {
                 const tagsString = line.replace('タグ:', '').trim();
                 workInfo.tags = tagsString.split(',').map(tag => tag.trim());
-                console.log('タグを解析しました:', tagsString, '→', workInfo.tags);
             } else if (line.startsWith('役割:')) {
                 workInfo.role = line.replace('役割:', '').trim();
-                console.log('役割を解析しました:', workInfo.role);
             } else if (line.startsWith('紹介文:')) {
                 workInfo.description = line.replace('紹介文:', '').trim();
             }
@@ -130,8 +129,6 @@ class TxtWorkReader {
 
         // ページタイトルも更新
         document.title = `${this.workData.title} - Shohei Yamaguchi`;
-
-        console.log('作品情報を表示しました:', this.workData);
     }
 
     // 特定の作品IDで作品情報を読み込んで表示

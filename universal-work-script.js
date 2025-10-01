@@ -16,7 +16,6 @@ document.addEventListener('DOMContentLoaded', async function () {
         const workData = await loadWorkData(workId);
 
         if (workData) {
-            console.log('作品データが正常に読み込まれました:', workData);
             renderWorkPage(workData);
             // 画像も動的に読み込み
             await loadWorkImages(workId, workData.folderName);
@@ -32,7 +31,6 @@ document.addEventListener('DOMContentLoaded', async function () {
 
     // 言語変更イベントをリッスン
     document.addEventListener('languageChanged', async (event) => {
-        console.log('言語が変更されました。作品ページを再読み込みします。', event.detail);
         try {
             const workData = await loadWorkData(workId);
             if (workData) {
@@ -610,8 +608,6 @@ function downloadPNG() {
         link.download = `${currentWorkData.title || 'work'}.png`;
         link.href = currentDataUrl;
         link.click();
-
-        console.log('ダウンロードを開始しました。');
     } catch (error) {
         console.error('ダウンロードエラー:', error);
         alert('ダウンロードに失敗しました: ' + error.message);
@@ -701,13 +697,7 @@ async function loadWorkImages(workId, folderName) {
 
         // 画像読み込みエラーの処理
         imgElement.onerror = function () {
-            console.warn(`画像の読み込みに失敗しました: images/${folderName}/${imageFile}`);
             this.style.display = 'none';
-        };
-
-        // 画像読み込み成功の処理
-        imgElement.onload = function () {
-            console.log(`画像の読み込みに成功しました: images/${folderName}/${imageFile}`);
         };
 
         imagesContainer.appendChild(imgElement);
@@ -786,7 +776,6 @@ async function getImageFiles(folderName) {
             if (!foundForThisNumber) {
                 consecutiveNotFound++;
                 if (consecutiveNotFound >= maxConsecutiveNotFound) {
-                    console.log(`フォルダ ${folderName}: 連続${consecutiveNotFound}回ファイルが見つからないため、検索を終了`);
                     break;
                 }
             }

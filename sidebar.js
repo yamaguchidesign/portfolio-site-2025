@@ -95,26 +95,20 @@ class Sidebar {
         const langJPBtn = document.getElementById('langJP');
         const langENBtn = document.getElementById('langEN');
 
-        console.log('Language buttons found:', langJPBtn, langENBtn);
-
         if (langJPBtn && langENBtn) {
             // JPボタンのクリックイベント
             langJPBtn.addEventListener('click', () => {
-                console.log('JP button clicked');
                 this.setLanguage('ja');
             });
 
             // ENボタンのクリックイベント
             langENBtn.addEventListener('click', () => {
-                console.log('EN button clicked');
                 this.setLanguage('en');
             });
 
             // 初期化時に現在の言語に応じてボタンの表示を更新
             const currentLang = localStorage.getItem('language') || 'ja';
             this.updateLanguageButtons(currentLang);
-        } else {
-            console.error('Language buttons not found');
         }
     }
 
@@ -123,11 +117,8 @@ class Sidebar {
 
         // 既に選択されている言語の場合は何もしない
         if (currentLang === lang) {
-            console.log('Already in', lang, 'mode');
             return;
         }
-
-        console.log('Changing language from', currentLang, 'to', lang);
 
         // 言語設定を保存
         localStorage.setItem('language', lang);
@@ -136,7 +127,6 @@ class Sidebar {
         this.updateLanguageButtons(lang);
 
         // 言語変更イベントを発火
-        console.log('Dispatching languageChanged event');
         document.dispatchEvent(new CustomEvent('languageChanged', {
             detail: { language: lang }
         }));

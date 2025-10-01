@@ -33,32 +33,22 @@ class Portfolio {
         await this.loadTxtWorks();
 
         this.filteredWorks = [...this.works];
-        console.log('Loaded works:', this.works.length);
     }
 
     async loadTxtWorks() {
-        console.log('loadTxtWorks開始 - 現在の言語:', window.languageManager ? window.languageManager.getCurrentLanguage() : '未設定');
-
         // TxtWorkReaderを使用してtxtファイルから作品情報を読み込み
         const txtReader = new TxtWorkReader();
         const availableWorkIds = await txtReader.getAvailableWorkIds();
-
-        console.log('利用可能な作品ID:', availableWorkIds);
 
         // 空の配列から開始して、txtファイルのデータのみを追加
         this.works = [];
 
         for (let workId of availableWorkIds) {
             try {
-                console.log(`作品 ${workId} のtxtファイルを読み込み中...`);
                 const txtWorkData = await txtReader.loadWorkFromTxt(workId);
-                console.log(`作品 ${workId} の読み込み結果:`, txtWorkData);
 
                 if (txtWorkData) {
                     // txtファイルから新しい作品データを作成
-                    console.log(`作品 ${workId} の読み込みデータ:`, txtWorkData);
-                    console.log(`作品 ${workId} のタイトル:`, txtWorkData.title);
-
                     // workIdは既にフォルダ名の一部なので、そのまま使用
                     const folderName = `works-${workId}`;
 
@@ -70,20 +60,30 @@ class Portfolio {
                         role: 'designer',
                         tags: txtWorkData.tags && txtWorkData.tags.length > 0 ? txtWorkData.tags : ['グラフィックデザイン'], // txtファイルからタグを読み込み
                         images: [`images/${folderName}/`],
+                        priority: txtWorkData.priority !== undefined ? txtWorkData.priority : null, // 優先度を追加
                         featured: true,
                         folderName: folderName // フォルダ名を保存
                     };
                     this.works.push(newWork);
-                    console.log(`作品 ${workId} をtxtファイルから追加しました:`, newWork);
-                } else {
-                    console.warn(`作品 ${workId} のtxtファイルデータが空です`);
                 }
             } catch (error) {
                 console.error(`作品 ${workId} のtxtファイル読み込みに失敗:`, error);
             }
         }
 
-        console.log('最終的な作品データ:', this.works);
+        // Home画面用：Priorityでフィルタリングとソート
+        this.sortAndFilterByPriority();
+    }
+
+    sortAndFilterByPriority() {
+        // Priority > 0 の作品のみを抽出（0またはnullは除外）
+        const featuredWorks = this.works.filter(work => work.priority && work.priority > 0);
+
+        // Priorityの昇順（数値が小さいほど優先）でソート
+        featuredWorks.sort((a, b) => a.priority - b.priority);
+
+        // Home画面ではfeaturedWorksのみを表示
+        this.works = featuredWorks;
     }
 
 
@@ -183,7 +183,6 @@ class Portfolio {
                 consecutiveNotFound++;
                 // 連続してファイルが見つからない場合、早期終了
                 if (consecutiveNotFound >= maxConsecutiveNotFound) {
-                    console.log(`フォルダ ${folderPath}: 連続${consecutiveNotFound}回ファイルが見つからないため、検索を終了`);
                     break;
                 }
             }
@@ -216,14 +215,12 @@ class Portfolio {
                     consecutiveNotFound++;
                     // 連続してファイルが見つからない場合、早期終了
                     if (consecutiveNotFound >= maxConsecutiveNotFound) {
-                        console.log(`フォルダ ${folderPath}: 連続${consecutiveNotFound}回ファイルが見つからないため、検索を終了`);
                         break;
                     }
                 }
             }
         }
 
-        console.log(`フォルダ ${folderPath}: ${foundImages.length}個の画像ファイルを発見:`, foundImages);
         return foundImages;
     }
 
@@ -285,8 +282,6 @@ class Portfolio {
 
     async renderWorks() {
         const worksVertical = document.getElementById('worksVertical');
-        console.log('Rendering works:', this.works.length, 'works');
-        console.log('Works data:', this.works);
 
         if (this.works.length === 0) {
             worksVertical.innerHTML = '<p class="no-works">No works found.</p>';
@@ -296,14 +291,12 @@ class Portfolio {
         // 各作品の画像を非同期で読み込み
         const worksWithImages = await Promise.all(
             this.works.map(async (work) => {
-                console.log('Processing work:', work);
                 const images = await this.loadWorkImages(work);
                 return { ...work, loadedImages: images };
             })
         );
 
         worksVertical.innerHTML = worksWithImages.map((work, index) => {
-            console.log(`Rendering work ${index}:`, work.title, work.client, work.description);
             return `
             <div class="work-item-vertical" style="animation-delay: ${index * 0.2}s">
                 <div class="work-header-vertical">
@@ -352,14 +345,6 @@ class Portfolio {
                 // ローディング表示を削除
                 emailLink.classList.remove('loading');
             }, 500);
-
-            // クリック時の追加保護
-            emailLink.addEventListener('click', (e) => {
-                // 人間のクリックかどうかを確認（簡単な検証）
-                if (e.detail === 1) { // シングルクリック
-                    console.log('Email clicked by human user');
-                }
-            });
         }
     }
 
@@ -375,30 +360,23 @@ function initBackToTop() {
     const backToTopBtn = document.getElementById('backToTop');
 
     if (!backToTopBtn) {
-        console.log('Back to top button not found');
         return;
     }
-
-    console.log('Back to top button found, initializing...');
 
     // Show/hide button based on scroll position
     window.addEventListener('scroll', () => {
         const scrollY = window.pageYOffset;
         const threshold = window.innerHeight * 2; // 200vh
-        console.log('Scroll position:', scrollY, 'Threshold:', threshold);
 
         if (scrollY > threshold) {
             backToTopBtn.classList.add('visible');
-            console.log('Button should be visible');
         } else {
             backToTopBtn.classList.remove('visible');
-            console.log('Button should be hidden');
         }
     });
 
     // Smooth scroll to top when clicked
     backToTopBtn.addEventListener('click', () => {
-        console.log('Back to top clicked');
         window.scrollTo({
             top: 0,
             behavior: 'smooth'
@@ -433,7 +411,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 言語変更イベントをリッスン
     document.addEventListener('languageChanged', () => {
-        console.log('言語が変更されました。ホームページを再読み込みします。');
         portfolio.init(); // ポートフォリオを再初期化
         updateAboutSection(); // Aboutセクションも更新
     });
