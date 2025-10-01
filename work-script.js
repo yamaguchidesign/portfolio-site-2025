@@ -44,6 +44,17 @@ const roles = {
     'engineer': 'Engineer'
 };
 
+// Tag translations
+const tagTranslations = {
+    'ロゴ': 'Logo',
+    'UI/UX': 'UI/UX',
+    'ブランディング': 'Branding',
+    'Web': 'Web',
+    'キャラクターデザイン': 'Character Design',
+    'パッケージ': 'Package',
+    'イラストレーション': 'Illustration'
+};
+
 // Role tooltips
 function getRoleWithTooltip(role) {
     const currentLang = window.languageManager ? window.languageManager.getCurrentLanguage() : 'ja';
@@ -112,10 +123,12 @@ function renderWorkPage(work) {
     // Update work tags
     const tagsElement = document.querySelector('.work-tags');
     if (tagsElement) {
+        const currentLang = window.languageManager ? window.languageManager.getCurrentLanguage() : 'ja';
         const tags = Array.isArray(work.tags) ? work.tags : [work.tags];
         tagsElement.innerHTML = tags.map(tag => {
             const count = getTagCount(tag);
-            return `<span class="work-tag">${tag}(${count})</span>`;
+            const displayTag = currentLang === 'en' && tagTranslations[tag] ? tagTranslations[tag] : tag;
+            return `<span class="work-tag">${displayTag}(${count})</span>`;
         }).join('');
     }
 

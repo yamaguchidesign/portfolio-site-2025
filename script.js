@@ -13,6 +13,17 @@ class Portfolio {
             'engineer': 'Engineer'
         };
 
+        // Tag translations
+        this.tagTranslations = {
+            'ロゴ': 'Logo',
+            'UI/UX': 'UI/UX',
+            'ブランディング': 'Branding',
+            'Web': 'Web',
+            'キャラクターデザイン': 'Character Design',
+            'パッケージ': 'Package',
+            'イラストレーション': 'Illustration'
+        };
+
         this.init();
     }
 
@@ -302,7 +313,24 @@ class Portfolio {
             })
         );
 
+        // 現在の言語を取得
+        const currentLang = window.languageManager ? window.languageManager.getCurrentLanguage() : 'ja';
+
         worksVertical.innerHTML = worksWithImages.map((work, index) => {
+            // タグの翻訳処理
+            const renderTags = (tags) => {
+                if (Array.isArray(tags)) {
+                    return tags.map(tag => {
+                        const displayTag = currentLang === 'en' && this.tagTranslations[tag] ? this.tagTranslations[tag] : tag;
+                        return `<span class="tag-btn clickable-tag" data-tag="${tag}">${displayTag}(${this.getTagCount(tag)})</span>`;
+                    }).join('');
+                } else {
+                    const tag = tags || 'デザイン';
+                    const displayTag = currentLang === 'en' && this.tagTranslations[tag] ? this.tagTranslations[tag] : tag;
+                    return `<span class="tag-btn clickable-tag" data-tag="${tag}">${displayTag}(${this.getTagCount(tag)})</span>`;
+                }
+            };
+
             return `
             <div class="work-item-vertical" style="animation-delay: ${index * 0.2}s">
                 <div class="work-header-vertical">
@@ -310,7 +338,7 @@ class Portfolio {
                     <div class="work-meta-vertical">
                         <p class="work-client-vertical">${work.client || 'クライアント名なし'}</p>
                         <p class="work-role-vertical">role: ${this.getRoleWithTooltip(this.roles[work.role] || work.role || 'designer')}</p>
-                        <div class="work-tags-vertical">${Array.isArray(work.tags) ? work.tags.map(tag => `<span class="tag-btn clickable-tag" data-tag="${tag}">${tag}(${this.getTagCount(tag)})</span>`).join('') : `<span class="tag-btn clickable-tag" data-tag="${work.tags || 'デザイン'}">${work.tags || 'デザイン'}(${this.getTagCount(work.tags || 'デザイン')})</span>`}</div>
+                        <div class="work-tags-vertical">${renderTags(work.tags)}</div>
                     </div>
                 </div>
                 

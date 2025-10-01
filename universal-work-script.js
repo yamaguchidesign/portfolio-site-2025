@@ -236,6 +236,17 @@ async function getFolderNameFromWorkId(workId) {
     }
 }
 
+// Tag translations
+const tagTranslations = {
+    'ロゴ': 'Logo',
+    'UI/UX': 'UI/UX',
+    'ブランディング': 'Branding',
+    'Web': 'Web',
+    'キャラクターデザイン': 'Character Design',
+    'パッケージ': 'Package',
+    'イラストレーション': 'Illustration'
+};
+
 // 0.txtファイルをパース
 function parseWorkText(text) {
     const lines = text.split('\n');
@@ -721,10 +732,12 @@ function renderWorkPage(work) {
     // タグを更新
     const tagsElement = document.querySelector('.work-tags');
     if (tagsElement && work.tags) {
+        const currentLang = window.languageManager ? window.languageManager.getCurrentLanguage() : 'ja';
         const tags = Array.isArray(work.tags) ? work.tags : [work.tags];
-        tagsElement.innerHTML = tags.map(tag =>
-            `<span class="work-tag tag-btn">${tag}</span>`
-        ).join('');
+        tagsElement.innerHTML = tags.map(tag => {
+            const displayTag = currentLang === 'en' && tagTranslations[tag] ? tagTranslations[tag] : tag;
+            return `<span class="work-tag tag-btn">${displayTag}</span>`;
+        }).join('');
     }
 
     // 説明を更新
