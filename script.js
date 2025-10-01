@@ -406,6 +406,23 @@ function initBackToTop() {
     });
 }
 
+// Aboutセクションの言語切り替え
+function updateAboutSection() {
+    const currentLang = window.languageManager ? window.languageManager.getCurrentLanguage() : 'ja';
+    const jaContent = document.querySelector('.about-text .lang-ja');
+    const enContent = document.querySelector('.about-text .lang-en');
+
+    if (jaContent && enContent) {
+        if (currentLang === 'ja') {
+            jaContent.style.display = 'block';
+            enContent.style.display = 'none';
+        } else {
+            jaContent.style.display = 'none';
+            enContent.style.display = 'block';
+        }
+    }
+}
+
 // Initialize portfolio when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
     // ページ読み込み時にスクロール位置を最上部にリセット
@@ -418,7 +435,11 @@ document.addEventListener('DOMContentLoaded', () => {
     document.addEventListener('languageChanged', () => {
         console.log('言語が変更されました。ホームページを再読み込みします。');
         portfolio.init(); // ポートフォリオを再初期化
+        updateAboutSection(); // Aboutセクションも更新
     });
+
+    // 初期表示時にもAboutセクションを更新
+    updateAboutSection();
 });
 
 

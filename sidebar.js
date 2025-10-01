@@ -27,9 +27,9 @@ class Sidebar {
         return `
             <div class="side-menu-content">
                 <div class="language-switcher">
-                    <button id="languageToggle" class="language-toggle">
-                        <span class="other-lang">JP</span><span>|</span><span class="current-lang">EN</span>
-                    </button>
+                    <button id="langJP" class="lang-btn" data-lang="ja">JP</button>
+                    <span class="lang-separator">|</span>
+                    <button id="langEN" class="lang-btn" data-lang="en">EN</button>
                 </div>
                 <div class="profile-info">
                     <h1 class="logo">Shohei Yamaguchi</h1>
@@ -92,49 +92,73 @@ class Sidebar {
     }
 
     initLanguageToggle() {
-        const languageToggle = document.getElementById('languageToggle');
-        console.log('Language toggle button found:', languageToggle);
-        if (languageToggle) {
-            languageToggle.addEventListener('click', () => {
-                console.log('Language toggle clicked');
-                this.toggleLanguage();
+        const langJPBtn = document.getElementById('langJP');
+        const langENBtn = document.getElementById('langEN');
+
+        console.log('Language buttons found:', langJPBtn, langENBtn);
+
+        if (langJPBtn && langENBtn) {
+            // JPボタンのクリックイベント
+            langJPBtn.addEventListener('click', () => {
+                console.log('JP button clicked');
+                this.setLanguage('ja');
+            });
+
+            // ENボタンのクリックイベント
+            langENBtn.addEventListener('click', () => {
+                console.log('EN button clicked');
+                this.setLanguage('en');
             });
 
             // 初期化時に現在の言語に応じてボタンの表示を更新
             const currentLang = localStorage.getItem('language') || 'ja';
-            this.updateLanguageButton(currentLang);
+            this.updateLanguageButtons(currentLang);
         } else {
-            console.error('Language toggle button not found');
+            console.error('Language buttons not found');
         }
     }
 
-    toggleLanguage() {
-        // 現在の言語を取得（デフォルトは日本語）
+    setLanguage(lang) {
         const currentLang = localStorage.getItem('language') || 'ja';
-        const newLang = currentLang === 'ja' ? 'en' : 'ja';
 
-        console.log('Toggling language from', currentLang, 'to', newLang);
+        // 既に選択されている言語の場合は何もしない
+        if (currentLang === lang) {
+            console.log('Already in', lang, 'mode');
+            return;
+        }
+
+        console.log('Changing language from', currentLang, 'to', lang);
 
         // 言語設定を保存
-        localStorage.setItem('language', newLang);
+        localStorage.setItem('language', lang);
 
         // ボタンの表示を更新
-        this.updateLanguageButton(newLang);
+        this.updateLanguageButtons(lang);
 
         // 言語変更イベントを発火
         console.log('Dispatching languageChanged event');
         document.dispatchEvent(new CustomEvent('languageChanged', {
-            detail: { language: newLang }
+            detail: { language: lang }
         }));
     }
 
-    updateLanguageButton(lang) {
-        const languageToggle = document.querySelector('.language-toggle');
-        if (languageToggle) {
+    updateLanguageButtons(lang) {
+        const langJPBtn = document.getElementById('langJP');
+        const langENBtn = document.getElementById('langEN');
+
+        if (langJPBtn && langENBtn) {
             if (lang === 'ja') {
-                languageToggle.innerHTML = '<span class="current-lang">JP</span><span>|</span><span class="other-lang">EN</span>';
+                // JP選択中
+                langJPBtn.classList.add('active');
+                langJPBtn.disabled = true;
+                langENBtn.classList.remove('active');
+                langENBtn.disabled = false;
             } else {
-                languageToggle.innerHTML = '<span class="other-lang">JP</span><span>|</span><span class="current-lang">EN</span>';
+                // EN選択中
+                langJPBtn.classList.remove('active');
+                langJPBtn.disabled = false;
+                langENBtn.classList.add('active');
+                langENBtn.disabled = true;
             }
         }
     }

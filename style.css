@@ -58,26 +58,42 @@ body {
 /* 言語切り替えボタン */
 .language-switcher {
     margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
 
-.language-toggle {
+.lang-btn {
     background: transparent;
     border: none;
     padding: 8px 0;
-    display: flex;
-    align-items: center;
     cursor: pointer;
     transition: all 0.3s ease;
     font-size: 12px;
-    font-weight: 500;
+    font-weight: bold;
+    color: #000;
+    border-bottom: 1px solid transparent;
+    padding-bottom: 4px;
+    letter-spacing: 0.8px;
 }
 
-.language-toggle:hover {
-    /* hover時の上移動を削除 */
+.lang-btn:hover:not(:disabled) {
+    opacity: 0.7;
 }
 
-.language-text {
-    font-weight: 600;
+.lang-btn.active {
+    border-bottom: 1px solid #000;
+}
+
+.lang-btn:disabled {
+    cursor: default;
+    opacity: 1;
+}
+
+.lang-separator {
+    font-size: 12px;
+    font-weight: bold;
+    color: #000;
 }
 
 .profile-info {
@@ -1413,30 +1429,6 @@ body {
     transform: translateY(0);
 }
 
-/* 言語切り替えボタンのスタイル */
-.language-toggle {
-    display: flex;
-    gap: 8px;
-    align-items: center;
-}
-
-.current-lang {
-    font-weight: bold;
-    color: #000;
-    border-bottom: 1px solid #000;
-    padding-bottom: 4px;
-    letter-spacing: 0.8px;
-}
-
-.other-lang {
-    font-weight: bold;
-    color: #000;
-    border-bottom: 1px solid transparent;
-    /* 透明な下線を追加 */
-    padding-bottom: 4px;
-    /* パディングを追加 */
-    letter-spacing: 0.8px;
-}
 
 /* エクスポート用スタイル */
 #export-content {
