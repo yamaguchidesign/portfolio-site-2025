@@ -44,6 +44,33 @@ const roles = {
     'engineer': 'Engineer'
 };
 
+// Role tooltips
+function getRoleWithTooltip(role) {
+    const currentLang = window.languageManager ? window.languageManager.getCurrentLanguage() : 'ja';
+
+    const tooltips = {
+        'Art Director': {
+            ja: 'クライアントと直接やり取りをしながら、案件の進行に関わりつつ、デザインのクオリティを保証する役割。多くの案件で自身も手を動かす。',
+            en: 'Responsible for ensuring design quality while managing project progress and communicating directly with clients. Often hands-on in many projects.'
+        },
+        'Designer': {
+            ja: 'アートディレクターの示す方向性をもとに、手を動かしてアウトプットを制作する役割。',
+            en: 'Creates outputs hands-on based on the direction provided by the Art Director.'
+        },
+        'Illustrator': {
+            ja: 'キャラクターやイラスト表現を制作する役割。',
+            en: 'Creates characters and illustration expressions.'
+        },
+        'Engineer': {
+            ja: 'デザインや要件を受けて、実装を担当する役割。',
+            en: 'Responsible for implementation based on designs and requirements.'
+        }
+    };
+
+    const tooltipText = tooltips[role] ? tooltips[role][currentLang] : tooltips['Art Director'][currentLang];
+    return `<span class="tooltip">${role}<span class="tooltiptext">${tooltipText}</span></span>`;
+}
+
 // Get tag count from portfolio data
 function getTagCount(tag) {
     if (typeof portfolioData === 'undefined' || !portfolioData.works) {
@@ -79,7 +106,7 @@ function renderWorkPage(work) {
     const roleElement = document.querySelector('.work-role');
     if (roleElement) {
         const roleText = roles[work.role] || work.role;
-        roleElement.textContent = `role: ${roleText}`;
+        roleElement.innerHTML = `role: ${getRoleWithTooltip(roleText)}`;
     }
 
     // Update work tags

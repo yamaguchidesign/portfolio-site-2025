@@ -5,6 +5,18 @@ class AllWorks {
         this.filteredWorks = [];
         this.currentFilter = 'all';
         this.allTags = new Set();
+
+        // タグの日英マッピング
+        this.tagTranslations = {
+            'ロゴ': 'Logo',
+            'UI/UX': 'UI/UX',
+            'ブランディング': 'Branding',
+            'Web': 'Web',
+            'キャラクターデザイン': 'Character Design',
+            'パッケージ': 'Package',
+            'イラストレーション': 'Illustration'
+        };
+
         this.init().catch(error => {
             console.error('Error initializing AllWorks:', error);
         });
@@ -60,7 +72,7 @@ class AllWorks {
                 const response = await fetch(`images/works-${i}/0.txt`);
                 if (response.ok) {
                     const txtContent = await response.text();
-                    const workData = this.parseWorkText(txtContent, i);
+                    const workData = this.parseWorkTextWithLanguage(txtContent, i);
                     if (workData) {
                         detectedWorks.push(workData);
                     }
@@ -82,7 +94,7 @@ class AllWorks {
                         const response = await fetch(`images/${folderName}/0.txt`);
                         if (response.ok) {
                             const txtContent = await response.text();
-                            const workData = this.parseWorkText(txtContent, folderName);
+                            const workData = this.parseWorkTextWithLanguage(txtContent, folderName);
                             if (workData) {
                                 // 既に追加済みでないかチェック
                                 const existingWork = detectedWorks.find(work => work.id === workData.id);
@@ -133,6 +145,20 @@ class AllWorks {
             // 数字でない場合は文字列として扱う
             return folderName;
         }
+    }
+
+    parseWorkTextWithLanguage(text, folderName) {
+        // languageManagerを使って言語別にパース
+        if (window.languageManager) {
+            const parsedData = window.languageManager.parseWorkTextWithLanguage(text);
+            const workData = window.languageManager.getWorkInfoForCurrentLanguage(parsedData);
+            workData.folderName = folderName;
+            workData.rawText = text;
+            return workData;
+        }
+
+        // フォールバック: languageManagerがない場合は日本語のみパース
+        return this.parseWorkText(text, folderName);
     }
 
     parseWorkText(text, folderName) {
@@ -287,6 +313,7 @@ class AllWorks {
     renderTagButtons() {
         const tagButtonsContainer = document.getElementById('tagButtons');
         const totalWorks = this.works.length;
+        const currentLang = window.languageManager ? window.languageManager.getCurrentLanguage() : 'ja';
 
         // 指定された順番でタグを並べる
         const tagOrder = ['ロゴ', 'UI/UX', 'ブランディング', 'Web', 'キャラクターデザイン', 'パッケージ', 'イラストレーション'];
@@ -297,7 +324,8 @@ class AllWorks {
             `<button class="tag-btn active" data-tag="all">All(${totalWorks})</button>`,
             ...sortedTags.map(tag => {
                 const count = this.getTagCount(tag);
-                return `<button class="tag-btn" data-tag="${tag}">${tag}(${count})</button>`;
+                const displayTag = currentLang === 'en' && this.tagTranslations[tag] ? this.tagTranslations[tag] : tag;
+                return `<button class="tag-btn" data-tag="${tag}">${displayTag}(${count})</button>`;
             })
         ].join('');
     }
@@ -401,24 +429,30 @@ class AllWorks {
     }
 
     getRoleWithTooltip(role) {
-        // 役割に応じたツールチップ文言を設定
-        let tooltipText = '';
-        switch (role) {
-            case 'Art Director':
-                tooltipText = 'クライアントと直接やり取りをしながら、案件の進行に関わりつつ、デザインのクオリティを保証する役割。多くの案件で自身も手を動かす。';
-                break;
-            case 'Designer':
-                tooltipText = 'アートディレクターの示す方向性をもとに、手を動かしてアウトプットを制作する役割。';
-                break;
-            case 'Illustrator':
-                tooltipText = 'キャラクターやイラスト表現を制作する役割。';
-                break;
-            case 'Engineer':
-                tooltipText = 'デザインや要件を受けて、実装を担当する役割。';
-                break;
-            default:
-                tooltipText = 'クライアントと直接やり取りをしながら、案件の進行に関わりつつ、デザインのクオリティを保証する役割。多くの案件で自身も手を動かす。';
-        }
+        // 現在の言語を取得
+        const currentLang = window.languageManager ? window.languageManager.getCurrentLanguage() : 'ja';
+
+        // 役割に応じたツールチップ文言を設定（日本語/英語）
+        const tooltips = {
+            'Art Director': {
+                ja: 'クライアントと直接やり取りをしながら、案件の進行に関わりつつ、デザインのクオリティを保証する役割。多くの案件で自身も手を動かす。',
+                en: 'Responsible for ensuring design quality while managing project progress and communicating directly with clients. Often hands-on in many projects.'
+            },
+            'Designer': {
+                ja: 'アートディレクターの示す方向性をもとに、手を動かしてアウトプットを制作する役割。',
+                en: 'Creates outputs hands-on based on the direction provided by the Art Director.'
+            },
+            'Illustrator': {
+                ja: 'キャラクターやイラスト表現を制作する役割。',
+                en: 'Creates characters and illustration expressions.'
+            },
+            'Engineer': {
+                ja: 'デザインや要件を受けて、実装を担当する役割。',
+                en: 'Responsible for implementation based on designs and requirements.'
+            }
+        };
+
+        const tooltipText = tooltips[role] ? tooltips[role][currentLang] : tooltips['Art Director'][currentLang];
 
         return `<span class="tooltip">${role}<span class="tooltiptext">${tooltipText}</span></span>`;
     }
@@ -426,9 +460,12 @@ class AllWorks {
     renderWorkTags(tags) {
         if (!Array.isArray(tags)) return '';
 
+        const currentLang = window.languageManager ? window.languageManager.getCurrentLanguage() : 'ja';
+
         return tags.map(tag => {
             const count = this.getTagCount(tag);
-            return `<span class="tag-btn clickable-tag" data-tag="${tag}">${tag}(${count})</span>`;
+            const displayTag = currentLang === 'en' && this.tagTranslations[tag] ? this.tagTranslations[tag] : tag;
+            return `<span class="tag-btn clickable-tag" data-tag="${tag}">${displayTag}(${count})</span>`;
         }).join('');
     }
 
@@ -493,8 +530,10 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log('AllWorks initialized successfully');
 
         // 言語変更イベントをリッスン
-        window.addEventListener('languageChanged', () => {
-            allWorks.init(); // AllWorksを再初期化
+        document.addEventListener('languageChanged', () => {
+            setTimeout(() => {
+                allWorks.init(); // AllWorksを再初期化
+            }, 50);
         });
     } catch (error) {
         console.error('Error initializing AllWorks:', error);

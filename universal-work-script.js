@@ -53,6 +53,7 @@ document.addEventListener('DOMContentLoaded', async function () {
                     }
                 }
                 renderWorkPage(workData);
+                updateUITexts(); // ボタンテキストも更新
             }
         } catch (error) {
             console.error('言語変更後の再読み込みエラー:', error);
@@ -61,7 +62,58 @@ document.addEventListener('DOMContentLoaded', async function () {
 
     // エクスポート機能の初期化
     initExportFunctionality();
+
+    // 初回表示時にもUIテキストを更新
+    updateUITexts();
 });
+
+// UIテキストを言語に応じて更新
+function updateUITexts() {
+    const currentLang = window.languageManager ? window.languageManager.getCurrentLanguage() : 'ja';
+
+    const texts = {
+        downloadBtn: {
+            ja: '実績資料をダウンロードする',
+            en: 'Download Work Material'
+        },
+        modalTitle: {
+            ja: '実績画像プレビュー',
+            en: 'Work Image Preview'
+        },
+        downloadAgainBtn: {
+            ja: '実績資料をダウンロード(PNG)',
+            en: 'Download Work Material (PNG)'
+        },
+        closeBtn: {
+            ja: '閉じる',
+            en: 'Close'
+        }
+    };
+
+    // ダウンロードボタン
+    const downloadBtn = document.getElementById('download-work-png');
+    if (downloadBtn) {
+        downloadBtn.textContent = texts.downloadBtn[currentLang];
+    }
+
+    // モーダルタイトル
+    const modalTitle = document.querySelector('.export-modal-header h3');
+    if (modalTitle) {
+        modalTitle.textContent = texts.modalTitle[currentLang];
+    }
+
+    // モーダル内ダウンロードボタン
+    const downloadAgainBtn = document.getElementById('download-again-btn');
+    if (downloadAgainBtn) {
+        downloadAgainBtn.textContent = texts.downloadAgainBtn[currentLang];
+    }
+
+    // 閉じるボタン
+    const closeModalBtn = document.getElementById('close-modal-btn');
+    if (closeModalBtn) {
+        closeModalBtn.textContent = texts.closeBtn[currentLang];
+    }
+}
 
 // URLパラメータから作品IDを取得
 function getWorkIdFromPage() {
@@ -116,7 +168,16 @@ async function loadWorkData(workId) {
         }
 
         const text = await response.text();
-        const workData = parseWorkText(text);
+
+        // 言語マネージャーが利用可能な場合は、言語別データを取得
+        let workData;
+        if (window.languageManager) {
+            const parsedData = window.languageManager.parseWorkTextWithLanguage(text);
+            workData = window.languageManager.getWorkInfoForCurrentLanguage(parsedData);
+        } else {
+            workData = parseWorkText(text);
+        }
+
         workData.id = workId;
         workData.folderName = folderName;
 

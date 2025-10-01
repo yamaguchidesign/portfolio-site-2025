@@ -18,17 +18,16 @@
 --- 共通 ---
 ID:natural-water-salmon
 Priority:4
+タグ:ロゴ,Web,パッケージ,ブランディング
 
 --- 日本語 ---
 クライアント:ネッツフォレスト陸上養殖株式会社
 作品名:天然水サーモン ブランディング
 役割:Art Director
-タグ:ロゴ,Web,パッケージ,ブランディング
 紹介文:天然水サーモンは、ネッツフォレスト陸上養殖株式会社が手がける国産の循環式陸上養殖サーモンです。SEESAWでは、ブランドピラミッドの作成、ロゴデザイン、公式Webサイト、Amazon販売Webページ作成、複数のパッケージデザインや販促物作成を包括的に手掛けました。また、表層的なビジュアルのみならず、別商品とコラボする際のネーミングルールの策定や関連ブランドとの構造整理も行うことで、長期を見据えた強固なブランドづくりに貢献しました。
 
 --- English ---
 Client:Nets Forest Land-based Aquaculture Inc.
 Title:Natural Water Salmon Branding
 Role:Art Director
-Tags:Logo,Web,Package,Branding
 Description:Natural Water Salmon is a domestic recirculating land-based aquaculture salmon handled by Nets Forest Land-based Aquaculture Inc. At SEESAW, we comprehensively handled brand pyramid creation, logo design, official website, Amazon sales web page creation, multiple package designs, and promotional material creation. Beyond surface-level visuals, we also contributed to building a strong brand for the long term by establishing naming rules for collaborations with other products and organizing the structure with related brands.

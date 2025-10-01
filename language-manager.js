@@ -78,18 +78,17 @@ class LanguageManager {
         const workInfo = {
             id: '',
             priority: null,
+            tags: [], // 共通セクションのタグ（日本語）
             japanese: {
                 client: '',
                 title: '',
                 role: '',
-                tags: [],
                 description: ''
             },
             english: {
                 client: '',
                 title: '',
                 role: '',
-                tags: [],
                 description: ''
             }
         };
@@ -118,6 +117,9 @@ class LanguageManager {
                 } else if (line.startsWith('Priority:')) {
                     const priorityStr = line.replace('Priority:', '').trim();
                     workInfo.priority = parseInt(priorityStr, 10);
+                } else if (line.startsWith('タグ:')) {
+                    const tagsString = line.replace('タグ:', '').trim();
+                    workInfo.tags = tagsString.split(',').map(tag => tag.trim());
                 }
             } else if (currentSection === 'japanese') {
                 if (line.startsWith('クライアント:')) {
@@ -126,9 +128,6 @@ class LanguageManager {
                     workInfo.japanese.title = line.replace('作品名:', '').trim();
                 } else if (line.startsWith('役割:')) {
                     workInfo.japanese.role = line.replace('役割:', '').trim();
-                } else if (line.startsWith('タグ:')) {
-                    const tagsString = line.replace('タグ:', '').trim();
-                    workInfo.japanese.tags = tagsString.split(',').map(tag => tag.trim());
                 } else if (line.startsWith('紹介文:')) {
                     workInfo.japanese.description = line.replace('紹介文:', '').trim();
                 }
@@ -139,9 +138,6 @@ class LanguageManager {
                     workInfo.english.title = line.replace('Title:', '').trim();
                 } else if (line.startsWith('Role:')) {
                     workInfo.english.role = line.replace('Role:', '').trim();
-                } else if (line.startsWith('Tags:')) {
-                    const tagsString = line.replace('Tags:', '').trim();
-                    workInfo.english.tags = tagsString.split(',').map(tag => tag.trim());
                 } else if (line.startsWith('Description:')) {
                     workInfo.english.description = line.replace('Description:', '').trim();
                 }
@@ -162,7 +158,7 @@ class LanguageManager {
             client: source.client,
             title: source.title,
             role: source.role,
-            tags: source.tags,
+            tags: workInfo.tags, // タグは共通セクションから（日本語で統一）
             description: source.description
         };
     }

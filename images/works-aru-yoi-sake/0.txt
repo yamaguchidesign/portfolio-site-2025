@@ -18,17 +18,16 @@
 --- 共通 ---
 ID:aru-yoi-sake
 Priority:2
+タグ:ロゴ,Web,パッケージ
 
 --- 日本語 ---
 クライアント:株式会社オープンゲート
 作品名:クラフトサケブランド 在る 宵 ブランディング
 役割:Art Director
-タグ:ロゴ,Web,パッケージ
 紹介文:福岡県 福智町に誕生した酒蔵、天郷醸造所が展開するクラフトサケブランド「在る 宵」のアートディレクションを担当しました。在る 宵の世界観を表現したブランドロゴを起点にラベル、パッケージ、Webサイトなどクラフトサケブランド立ち上げに必要なツールのデザインを制作しました。
 
 --- English ---
 Client:Open Gate Inc.
 Title:Craft Sake Brand "Aru Yoi" Branding
 Role:Art Director
-Tags:Logo,Web,Package
 Description:Handled the art direction for "Aru Yoi," a craft sake brand launched by Tengo Brewery, a sake brewery born in Fukuchi Town, Fukuoka Prefecture. Starting with a brand logo that expresses the world of "Aru Yoi," we designed all the tools necessary for launching the craft sake brand, including labels, packages, and website.
