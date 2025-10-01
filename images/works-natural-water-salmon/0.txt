@@ -17,6 +17,7 @@
 
 --- 共通 ---
 ID:natural-water-salmon
+Priority:4
 
 --- 日本語 ---
 クライアント:ネッツフォレスト陸上養殖株式会社

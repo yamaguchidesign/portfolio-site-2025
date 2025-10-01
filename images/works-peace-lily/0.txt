@@ -17,6 +17,7 @@
 
 --- 共通 ---
 ID:peace-lily
+Priority:5
 
 --- 日本語 ---
 クライアント:

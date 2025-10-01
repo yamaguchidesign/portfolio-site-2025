@@ -17,6 +17,7 @@
 
 --- 共通 ---
 ID:cornpotter-sake
+Priority:1
 
 --- 日本語 ---
 クライアント:木花乃醸造所

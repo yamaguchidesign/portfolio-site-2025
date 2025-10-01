@@ -17,7 +17,7 @@
 
 --- 共通 ---
 ID:yozakura-noh
-Priority:1
+Priority:3
 
 --- 日本語 ---
 クライアント:一般社団法人夜桜能
