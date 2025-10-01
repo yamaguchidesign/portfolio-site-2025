@@ -80,8 +80,11 @@ class Sidebar {
         if (sidebar) {
             sidebar.innerHTML = this.getSidebarHTML();
             this.initBackToTop();
-            this.initLanguageToggle();
             this.initHamburgerMenu();
+            // 言語トグルは最後に初期化（DOMが完全に準備された後）
+            setTimeout(() => {
+                this.initLanguageToggle();
+            }, 0);
         }
     }
 

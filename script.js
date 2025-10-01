@@ -415,8 +415,10 @@ document.addEventListener('DOMContentLoaded', () => {
         updateAboutSection(); // Aboutセクションも更新
     });
 
-    // 初期表示時にもAboutセクションを更新
-    updateAboutSection();
+    // 初期表示時にもAboutセクションを更新（languageManagerの初期化後に実行）
+    setTimeout(() => {
+        updateAboutSection();
+    }, 100);
 });
 
 

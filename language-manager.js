@@ -7,7 +7,21 @@ class LanguageManager {
     }
 
     getStoredLanguage() {
-        return localStorage.getItem('language') || 'ja';
+        // すでにlocalStorageに保存されている場合はそれを使用
+        const stored = localStorage.getItem('language');
+        if (stored) {
+            return stored;
+        }
+
+        // 初回訪問時：ブラウザの言語設定を検出
+        const browserLang = navigator.language || navigator.userLanguage;
+
+        // 英語圏（en, en-US, en-GB等）の場合は英語、それ以外は日本語
+        if (browserLang.startsWith('en')) {
+            return 'en';
+        }
+
+        return 'ja'; // デフォルトは日本語
     }
 
     setLanguage(lang) {
