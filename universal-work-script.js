@@ -574,9 +574,9 @@ async function generatePreview(workData) {
         ctx.fillRect(0, 0, 1920, 1080);
 
         // テキスト情報を準備
-        const title = workData.title ? workData.title.substring(0, 30) : 'タイトルなし';
+        const title = workData.title ? workData.title.substring(0, 50) : 'タイトルなし';
         const client = workData.client || 'クライアント名なし';
-        const description = workData.description ? workData.description.substring(0, 250) : '説明がありません。';
+        const description = workData.description || '説明がありません。';
 
         // レイアウト設定
         const padding = 56;
@@ -601,6 +601,7 @@ async function generatePreview(workData) {
         const lineHeight = 1.5 * 24;
         const maxWidth = contentWidth; // パディング内の最大幅（画像用スペースを削除）
         let y = padding + 100 + 16; // タイトル位置の調整に合わせて変更 + 上マージン8px
+        const maxDescriptionHeight = 400; // 説明文の最大高さを拡張
 
         // 文字単位で折り返し処理
         let currentLine = '';
@@ -614,14 +615,14 @@ async function generatePreview(workData) {
                 ctx.fillText(currentLine, padding, y);
                 currentLine = char;
                 y += lineHeight;
-                if (y > padding + 260) break; // 最大高さ制限
+                if (y > padding + maxDescriptionHeight) break; // 最大高さ制限
             } else {
                 currentLine = testLine;
             }
         }
 
         // 最後の行を描画
-        if (currentLine && y <= padding + 260) {
+        if (currentLine && y <= padding + maxDescriptionHeight) {
             ctx.fillText(currentLine, padding, y);
         }
 
@@ -632,9 +633,10 @@ async function generatePreview(workData) {
             const imageCount = Math.min(images.length, 5);
             const gridSpacing = 16; // 画像間のスペース
 
-            if (imageCount === 3) {
-                // 3枚用レイアウト：1枚目左大、2-3枚目右縦並び
-                await drawThreeImageLayout(ctx, images, padding, gridSpacing);
+            if (imageCount === 3 || imageCount === 4) {
+                // 3枚または4枚の場合：最初の3枚のみ使用して3枚レイアウト
+                const threeImages = images.slice(0, 3);
+                await drawThreeImageLayout(ctx, threeImages, padding, gridSpacing);
             } else {
                 // 5枚用レイアウト（既存）
                 await drawFiveImageLayout(ctx, images, padding, gridSpacing, imageCount);
