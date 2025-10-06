@@ -48,16 +48,15 @@ class Portfolio {
         const txtReader = new TxtWorkReader();
         const availableWorkIds = await txtReader.getAvailableWorkIds();
 
-        // 空の配列から開始して、txtファイルのデータのみを追加
+        // 空の配列から開始して、Priorityが設定された作品のみを読み込み
         this.works = [];
 
         for (let workId of availableWorkIds) {
             try {
                 const txtWorkData = await txtReader.loadWorkFromTxt(workId);
 
-                if (txtWorkData) {
-                    // txtファイルから新しい作品データを作成
-                    // workIdは既にフォルダ名の一部なので、そのまま使用
+                if (txtWorkData && txtWorkData.priority && txtWorkData.priority > 0) {
+                    // Priorityが設定された作品のみを処理
                     const folderName = `works-${workId}`;
 
                     const newWork = {
@@ -68,7 +67,7 @@ class Portfolio {
                         role: 'designer',
                         tags: txtWorkData.tags && txtWorkData.tags.length > 0 ? txtWorkData.tags : ['グラフィックデザイン'], // txtファイルからタグを読み込み
                         images: [`images/${folderName}/`],
-                        priority: txtWorkData.priority !== undefined ? txtWorkData.priority : null, // 優先度を追加
+                        priority: txtWorkData.priority, // 優先度を追加
                         featured: true,
                         folderName: folderName // フォルダ名を保存
                     };
@@ -79,20 +78,10 @@ class Portfolio {
             }
         }
 
-        // Home画面用：Priorityでフィルタリングとソート
-        this.sortAndFilterByPriority();
+        // Priority順でソート
+        this.works.sort((a, b) => a.priority - b.priority);
     }
 
-    sortAndFilterByPriority() {
-        // Priority > 0 の作品のみを抽出（0またはnullは除外）
-        const featuredWorks = this.works.filter(work => work.priority && work.priority > 0);
-
-        // Priorityの昇順（数値が小さいほど優先）でソート
-        featuredWorks.sort((a, b) => a.priority - b.priority);
-
-        // Home画面ではfeaturedWorksのみを表示
-        this.works = featuredWorks;
-    }
 
 
     // 作品タイトルからタグを生成（キーワードマッピング機能を削除）
