@@ -165,7 +165,7 @@ class TxtWorkReader {
         ];
 
         const workIds = [];
-        
+
         // 各フォルダの0.txtファイルをチェック
         for (const folderName of folderNames) {
             try {
