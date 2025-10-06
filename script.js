@@ -44,25 +44,18 @@ class Portfolio {
     }
 
     async loadTxtWorks() {
-        console.log('Starting to load txt works...'); // デバッグ用
-
         // TxtWorkReaderを使用してtxtファイルから作品情報を読み込み
         const txtReader = new TxtWorkReader();
         const availableWorkIds = await txtReader.getAvailableWorkIds();
-
-        console.log('Available work IDs:', availableWorkIds); // デバッグ用
 
         // 空の配列から開始して、txtファイルのデータのみを追加
         this.works = [];
 
         for (let workId of availableWorkIds) {
             try {
-                console.log(`Loading work data for: ${workId}`); // デバッグ用
                 const txtWorkData = await txtReader.loadWorkFromTxt(workId);
 
                 if (txtWorkData) {
-                    console.log(`Successfully loaded data for ${workId}:`, txtWorkData); // デバッグ用
-
                     // txtファイルから新しい作品データを作成
                     // workIdは既にフォルダ名の一部なので、そのまま使用
                     const folderName = `works-${workId}`;
@@ -80,21 +73,14 @@ class Portfolio {
                         folderName: folderName // フォルダ名を保存
                     };
                     this.works.push(newWork);
-                    console.log(`Added work to collection: ${newWork.title}`); // デバッグ用
-                } else {
-                    console.warn(`No data loaded for work: ${workId}`); // デバッグ用
                 }
             } catch (error) {
                 console.error(`作品 ${workId} のtxtファイル読み込みに失敗:`, error);
             }
         }
 
-        console.log(`Total works loaded before filtering: ${this.works.length}`); // デバッグ用
-
         // Home画面用：Priorityでフィルタリングとソート
         this.sortAndFilterByPriority();
-
-        console.log(`Total works after filtering: ${this.works.length}`); // デバッグ用
     }
 
     sortAndFilterByPriority() {
@@ -195,7 +181,6 @@ class Portfolio {
                     // ファイルが存在しない場合は次の拡張子を試す（コンソールエラーは出力しない）
                     // 最初の拡張子（webp）で見つからない場合は、その番号での検索を即座に停止
                     if (ext === 'webp') {
-                        console.log(`Stopping search: ${number}.webp not found in ${folderPath}`);
                         break;
                     }
                 }
@@ -227,7 +212,6 @@ class Portfolio {
                         // ファイルが存在しない場合は次の拡張子を試す（コンソールエラーは出力しない）
                         // 最初の拡張子（webp）で見つからない場合は、その番号での検索を即座に停止
                         if (ext === 'webp') {
-                            console.log(`Stopping search (1-digit): ${number}.webp not found in ${folderPath}`);
                             break;
                         }
                     }

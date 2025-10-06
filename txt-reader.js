@@ -174,16 +174,12 @@ class TxtWorkReader {
                     // フォルダ名からIDを生成（実際のIDは0.txtから読み込まれる）
                     const workId = folderName.replace('works-', '');
                     workIds.push(workId);
-                    console.log(`Successfully loaded work: ${workId}`); // デバッグ用
-                } else {
-                    console.warn(`Failed to load 0.txt for ${folderName}: ${response.status}`); // デバッグ用
                 }
             } catch (error) {
                 console.error(`Error loading 0.txt for ${folderName}:`, error); // デバッグ用
             }
         }
 
-        console.log(`Total works loaded: ${workIds.length}`); // デバッグ用
         return workIds;
     }
 }
