@@ -37,28 +37,32 @@ class Portfolio {
     }
 
     async loadWorks() {
-        // Load works from the embedded data.js file
-        this.works = portfolioData.works || [];
-
-        // txtファイルの情報も読み込んで統合
+        // txtファイルの情報のみを使用（data.jsは空なので無視）
         await this.loadTxtWorks();
 
         this.filteredWorks = [...this.works];
     }
 
     async loadTxtWorks() {
+        console.log('Starting to load txt works...'); // デバッグ用
+        
         // TxtWorkReaderを使用してtxtファイルから作品情報を読み込み
         const txtReader = new TxtWorkReader();
         const availableWorkIds = await txtReader.getAvailableWorkIds();
+        
+        console.log('Available work IDs:', availableWorkIds); // デバッグ用
 
         // 空の配列から開始して、txtファイルのデータのみを追加
         this.works = [];
 
         for (let workId of availableWorkIds) {
             try {
+                console.log(`Loading work data for: ${workId}`); // デバッグ用
                 const txtWorkData = await txtReader.loadWorkFromTxt(workId);
 
                 if (txtWorkData) {
+                    console.log(`Successfully loaded data for ${workId}:`, txtWorkData); // デバッグ用
+                    
                     // txtファイルから新しい作品データを作成
                     // workIdは既にフォルダ名の一部なので、そのまま使用
                     const folderName = `works-${workId}`;
@@ -76,14 +80,21 @@ class Portfolio {
                         folderName: folderName // フォルダ名を保存
                     };
                     this.works.push(newWork);
+                    console.log(`Added work to collection: ${newWork.title}`); // デバッグ用
+                } else {
+                    console.warn(`No data loaded for work: ${workId}`); // デバッグ用
                 }
             } catch (error) {
                 console.error(`作品 ${workId} のtxtファイル読み込みに失敗:`, error);
             }
         }
 
+        console.log(`Total works loaded before filtering: ${this.works.length}`); // デバッグ用
+
         // Home画面用：Priorityでフィルタリングとソート
         this.sortAndFilterByPriority();
+        
+        console.log(`Total works after filtering: ${this.works.length}`); // デバッグ用
     }
 
     sortAndFilterByPriority() {

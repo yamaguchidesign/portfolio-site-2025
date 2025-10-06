@@ -145,9 +145,7 @@ class TxtWorkReader {
 
     // 利用可能な作品IDを取得（画像フォルダから自動検出）
     async getAvailableWorkIds() {
-        const workIds = [];
-
-        // 新しいIDベースのフォルダ名のリスト
+        // 新しいIDベースのフォルダ名のリスト（Netlifyでの読み込み問題を回避するため、固定リストを使用）
         const folderNames = [
             'works-al-medical-assist',
             'works-aru-yoi-sake',
@@ -166,6 +164,8 @@ class TxtWorkReader {
             'works-yozakura-noh'
         ];
 
+        const workIds = [];
+        
         // 各フォルダの0.txtファイルをチェック
         for (const folderName of folderNames) {
             try {
@@ -174,12 +174,16 @@ class TxtWorkReader {
                     // フォルダ名からIDを生成（実際のIDは0.txtから読み込まれる）
                     const workId = folderName.replace('works-', '');
                     workIds.push(workId);
+                    console.log(`Successfully loaded work: ${workId}`); // デバッグ用
+                } else {
+                    console.warn(`Failed to load 0.txt for ${folderName}: ${response.status}`); // デバッグ用
                 }
             } catch (error) {
-                // ファイルが存在しない場合は無視
+                console.error(`Error loading 0.txt for ${folderName}:`, error); // デバッグ用
             }
         }
 
+        console.log(`Total works loaded: ${workIds.length}`); // デバッグ用
         return workIds;
     }
 }
