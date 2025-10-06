@@ -178,7 +178,7 @@ class Portfolio {
 
         // 連続する404エラーを避けるため、最初の数個のファイルが見つからない場合は早期終了
         let consecutiveNotFound = 0;
-        const maxConsecutiveNotFound = 3;
+        const maxConsecutiveNotFound = 2; // より厳しくして、2回連続で見つからなければ終了
 
         // 2桁のゼロパディングパターンを最初に試す: 01.png, 02.png など（実際のファイル形式に合わせる）
         const twoDigitNumbers = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10'];
@@ -197,7 +197,7 @@ class Portfolio {
                         break; // 1つの番号で見つかったら次の番号に進む
                     }
                 } catch (error) {
-                    // ファイルが存在しない場合は次の拡張子を試す
+                    // ファイルが存在しない場合は次の拡張子を試す（コンソールエラーは出力しない）
                 }
             }
 
@@ -205,6 +205,7 @@ class Portfolio {
                 consecutiveNotFound++;
                 // 連続してファイルが見つからない場合、早期終了
                 if (consecutiveNotFound >= maxConsecutiveNotFound) {
+                    console.log(`Early termination: ${consecutiveNotFound} consecutive files not found in ${folderPath}`);
                     break;
                 }
             }
@@ -229,7 +230,7 @@ class Portfolio {
                             break; // 1つの番号で見つかったら次の番号に進む
                         }
                     } catch (error) {
-                        // ファイルが存在しない場合は次の拡張子を試す
+                        // ファイルが存在しない場合は次の拡張子を試す（コンソールエラーは出力しない）
                     }
                 }
 
@@ -237,6 +238,7 @@ class Portfolio {
                     consecutiveNotFound++;
                     // 連続してファイルが見つからない場合、早期終了
                     if (consecutiveNotFound >= maxConsecutiveNotFound) {
+                        console.log(`Early termination (1-digit): ${consecutiveNotFound} consecutive files not found in ${folderPath}`);
                         break;
                     }
                 }
