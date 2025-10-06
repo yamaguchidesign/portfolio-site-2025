@@ -313,18 +313,20 @@ class Portfolio {
             return;
         }
 
-        // 各作品の画像を非同期で読み込み
-        const worksWithImages = await Promise.all(
-            this.works.map(async (work) => {
-                const images = await this.loadWorkImages(work);
-                return { ...work, loadedImages: images };
-            })
-        );
+        // まず画像なしで作品を表示（高速表示）
+        this.renderWorksWithoutImages();
 
+        // 画像を並列で読み込み（バックグラウンド処理）
+        this.loadImagesInBackground();
+    }
+
+    renderWorksWithoutImages() {
+        const worksVertical = document.getElementById('worksVertical');
+        
         // 現在の言語を取得
         const currentLang = window.languageManager ? window.languageManager.getCurrentLanguage() : 'ja';
 
-        worksVertical.innerHTML = worksWithImages.map((work, index) => {
+        worksVertical.innerHTML = this.works.map((work, index) => {
             // タグの翻訳処理
             const renderTags = (tags) => {
                 if (Array.isArray(tags)) {
@@ -340,7 +342,7 @@ class Portfolio {
             };
 
             return `
-            <div class="work-item-vertical" style="animation-delay: ${index * 0.2}s">
+            <div class="work-item-vertical" style="animation-delay: ${index * 0.2}s" data-work-id="${work.id}">
                 <div class="work-header-vertical">
                     <h2 class="work-title-vertical">${work.title || 'タイトルなし'}</h2>
                     <div class="work-meta-vertical">
@@ -350,10 +352,8 @@ class Portfolio {
                     </div>
                 </div>
                 
-                <div class="work-images-vertical">
-                    ${work.loadedImages.length > 0 ? work.loadedImages.map(img => `
-                        <img src="${img}" alt="${work.title || '作品画像'}" class="work-image-vertical" loading="lazy">
-                    `).join('') : '<p class="no-images">画像が見つかりませんでした。</p>'}
+                <div class="work-images-vertical" id="images-${work.id}">
+                    <div class="image-loading">画像を読み込み中...</div>
                 </div>
                 
                 <div class="work-description-vertical">
@@ -363,6 +363,32 @@ class Portfolio {
             </div>
             `;
         }).join('');
+    }
+
+    async loadImagesInBackground() {
+        // 各作品の画像を並列で読み込み
+        this.works.forEach(async (work) => {
+            try {
+                const images = await this.loadWorkImages(work);
+                this.updateWorkImages(work.id, images);
+            } catch (error) {
+                console.error(`画像読み込みエラー (${work.id}):`, error);
+                this.updateWorkImages(work.id, []);
+            }
+        });
+    }
+
+    updateWorkImages(workId, images) {
+        const imageContainer = document.getElementById(`images-${workId}`);
+        if (!imageContainer) return;
+
+        if (images.length > 0) {
+            imageContainer.innerHTML = images.map(img => `
+                <img src="${img}" alt="作品画像" class="work-image-vertical" loading="lazy">
+            `).join('');
+        } else {
+            imageContainer.innerHTML = '<p class="no-images">画像が見つかりませんでした。</p>';
+        }
     }
 
     setupEmailProtection() {
