@@ -176,10 +176,6 @@ class Portfolio {
         const imageExtensions = ['jpg', 'jpeg', 'png', 'webp', 'gif', 'svg'];
         const foundImages = [];
 
-        // 連続する404エラーを避けるため、最初の数個のファイルが見つからない場合は早期終了
-        let consecutiveNotFound = 0;
-        const maxConsecutiveNotFound = 2; // より厳しくして、2回連続で見つからなければ終了
-
         // 2桁のゼロパディングパターンを最初に試す: 01.png, 02.png など（実際のファイル形式に合わせる）
         const twoDigitNumbers = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10'];
 
@@ -193,7 +189,6 @@ class Portfolio {
                     if (response.ok) {
                         foundImages.push(imagePath);
                         foundForThisNumber = true;
-                        consecutiveNotFound = 0; // リセット
                         break; // 1つの番号で見つかったら次の番号に進む
                     }
                 } catch (error) {
@@ -201,19 +196,15 @@ class Portfolio {
                 }
             }
 
+            // この番号でファイルが見つからなかった場合、検索を完全に停止
             if (!foundForThisNumber) {
-                consecutiveNotFound++;
-                // 連続してファイルが見つからない場合、早期終了
-                if (consecutiveNotFound >= maxConsecutiveNotFound) {
-                    console.log(`Early termination: ${consecutiveNotFound} consecutive files not found in ${folderPath}`);
-                    break;
-                }
+                console.log(`Stopping search: ${number}.{ext} not found in ${folderPath}`);
+                break;
             }
         }
 
         // 2桁でファイルが見つからない場合、1桁のパターンも試す: 1.jpg, 2.jpg など
         if (foundImages.length === 0) {
-            consecutiveNotFound = 0;
             const imageNumbers = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'];
 
             for (const number of imageNumbers) {
@@ -226,7 +217,6 @@ class Portfolio {
                         if (response.ok) {
                             foundImages.push(imagePath);
                             foundForThisNumber = true;
-                            consecutiveNotFound = 0; // リセット
                             break; // 1つの番号で見つかったら次の番号に進む
                         }
                     } catch (error) {
@@ -234,13 +224,10 @@ class Portfolio {
                     }
                 }
 
+                // この番号でファイルが見つからなかった場合、検索を完全に停止
                 if (!foundForThisNumber) {
-                    consecutiveNotFound++;
-                    // 連続してファイルが見つからない場合、早期終了
-                    if (consecutiveNotFound >= maxConsecutiveNotFound) {
-                        console.log(`Early termination (1-digit): ${consecutiveNotFound} consecutive files not found in ${folderPath}`);
-                        break;
-                    }
+                    console.log(`Stopping search (1-digit): ${number}.{ext} not found in ${folderPath}`);
+                    break;
                 }
             }
         }
