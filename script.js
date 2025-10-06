@@ -173,10 +173,10 @@ class Portfolio {
 
 
     async findImagesInFolder(folderPath) {
-        const imageExtensions = ['png', 'jpg', 'jpeg', 'webp', 'gif', 'svg'];
+        const imageExtensions = ['webp', 'png', 'jpg', 'jpeg', 'gif', 'svg'];
         const foundImages = [];
 
-        // 2桁のゼロパディングパターンを最初に試す: 01.png, 02.png など（実際のファイル形式に合わせる）
+        // 2桁のゼロパディングパターンを最初に試す: 01.webp, 02.webp など（WebPを最優先）
         const twoDigitNumbers = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10'];
 
         for (const number of twoDigitNumbers) {
@@ -193,9 +193,9 @@ class Portfolio {
                     }
                 } catch (error) {
                     // ファイルが存在しない場合は次の拡張子を試す（コンソールエラーは出力しない）
-                    // 最初の拡張子（png）で見つからない場合は、その番号での検索を即座に停止
-                    if (ext === 'png') {
-                        console.log(`Stopping search: ${number}.png not found in ${folderPath}`);
+                    // 最初の拡張子（webp）で見つからない場合は、その番号での検索を即座に停止
+                    if (ext === 'webp') {
+                        console.log(`Stopping search: ${number}.webp not found in ${folderPath}`);
                         break;
                     }
                 }
@@ -225,9 +225,9 @@ class Portfolio {
                         }
                     } catch (error) {
                         // ファイルが存在しない場合は次の拡張子を試す（コンソールエラーは出力しない）
-                        // 最初の拡張子（png）で見つからない場合は、その番号での検索を即座に停止
-                        if (ext === 'png') {
-                            console.log(`Stopping search (1-digit): ${number}.png not found in ${folderPath}`);
+                        // 最初の拡張子（webp）で見つからない場合は、その番号での検索を即座に停止
+                        if (ext === 'webp') {
+                            console.log(`Stopping search (1-digit): ${number}.webp not found in ${folderPath}`);
                             break;
                         }
                     }
