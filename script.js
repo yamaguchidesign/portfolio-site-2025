@@ -193,12 +193,16 @@ class Portfolio {
                     }
                 } catch (error) {
                     // ファイルが存在しない場合は次の拡張子を試す（コンソールエラーは出力しない）
+                    // 最初の拡張子（png）で見つからない場合は、その番号での検索を即座に停止
+                    if (ext === 'png') {
+                        console.log(`Stopping search: ${number}.png not found in ${folderPath}`);
+                        break;
+                    }
                 }
             }
 
             // この番号でファイルが見つからなかった場合、検索を完全に停止
             if (!foundForThisNumber) {
-                console.log(`Stopping search: ${number}.{ext} not found in ${folderPath}`);
                 break;
             }
         }
@@ -221,12 +225,16 @@ class Portfolio {
                         }
                     } catch (error) {
                         // ファイルが存在しない場合は次の拡張子を試す（コンソールエラーは出力しない）
+                        // 最初の拡張子（png）で見つからない場合は、その番号での検索を即座に停止
+                        if (ext === 'png') {
+                            console.log(`Stopping search (1-digit): ${number}.png not found in ${folderPath}`);
+                            break;
+                        }
                     }
                 }
 
                 // この番号でファイルが見つからなかった場合、検索を完全に停止
                 if (!foundForThisNumber) {
-                    console.log(`Stopping search (1-digit): ${number}.{ext} not found in ${folderPath}`);
                     break;
                 }
             }
