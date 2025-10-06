@@ -45,11 +45,11 @@ class Portfolio {
 
     async loadTxtWorks() {
         console.log('Starting to load txt works...'); // デバッグ用
-        
+
         // TxtWorkReaderを使用してtxtファイルから作品情報を読み込み
         const txtReader = new TxtWorkReader();
         const availableWorkIds = await txtReader.getAvailableWorkIds();
-        
+
         console.log('Available work IDs:', availableWorkIds); // デバッグ用
 
         // 空の配列から開始して、txtファイルのデータのみを追加
@@ -62,7 +62,7 @@ class Portfolio {
 
                 if (txtWorkData) {
                     console.log(`Successfully loaded data for ${workId}:`, txtWorkData); // デバッグ用
-                    
+
                     // txtファイルから新しい作品データを作成
                     // workIdは既にフォルダ名の一部なので、そのまま使用
                     const folderName = `works-${workId}`;
@@ -93,7 +93,7 @@ class Portfolio {
 
         // Home画面用：Priorityでフィルタリングとソート
         this.sortAndFilterByPriority();
-        
+
         console.log(`Total works after filtering: ${this.works.length}`); // デバッグ用
     }
 
@@ -180,10 +180,10 @@ class Portfolio {
         let consecutiveNotFound = 0;
         const maxConsecutiveNotFound = 3;
 
-        // 1桁のパターン: 1.jpg, 2.jpg, 3.jpg など
-        const imageNumbers = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'];
+        // 2桁のゼロパディングパターンを最初に試す: 01.png, 02.png など（実際のファイル形式に合わせる）
+        const twoDigitNumbers = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10'];
 
-        for (const number of imageNumbers) {
+        for (const number of twoDigitNumbers) {
             let foundForThisNumber = false;
 
             for (const ext of imageExtensions) {
@@ -210,12 +210,12 @@ class Portfolio {
             }
         }
 
-        // 1桁でファイルが見つからない場合、2桁のパターンも試す: 01.png, 02.png など
+        // 2桁でファイルが見つからない場合、1桁のパターンも試す: 1.jpg, 2.jpg など
         if (foundImages.length === 0) {
             consecutiveNotFound = 0;
-            const twoDigitNumbers = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10'];
+            const imageNumbers = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'];
 
-            for (const number of twoDigitNumbers) {
+            for (const number of imageNumbers) {
                 let foundForThisNumber = false;
 
                 for (const ext of imageExtensions) {
