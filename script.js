@@ -173,7 +173,7 @@ class Portfolio {
 
 
     async findImagesInFolder(folderPath) {
-        const imageExtensions = ['jpg', 'jpeg', 'png', 'webp', 'gif', 'svg'];
+        const imageExtensions = ['png', 'jpg', 'jpeg', 'webp', 'gif', 'svg'];
         const foundImages = [];
 
         // 2桁のゼロパディングパターンを最初に試す: 01.png, 02.png など（実際のファイル形式に合わせる）
@@ -189,7 +189,7 @@ class Portfolio {
                     if (response.ok) {
                         foundImages.push(imagePath);
                         foundForThisNumber = true;
-                        break; // 1つの番号で見つかったら次の番号に進む
+                        break; // この番号でファイルが見つかったら、同じ番号の他の拡張子は探さず次の番号に進む
                     }
                 } catch (error) {
                     // ファイルが存在しない場合は次の拡張子を試す（コンソールエラーは出力しない）
@@ -217,7 +217,7 @@ class Portfolio {
                         if (response.ok) {
                             foundImages.push(imagePath);
                             foundForThisNumber = true;
-                            break; // 1つの番号で見つかったら次の番号に進む
+                            break; // この番号でファイルが見つかったら、同じ番号の他の拡張子は探さず次の番号に進む
                         }
                     } catch (error) {
                         // ファイルが存在しない場合は次の拡張子を試す（コンソールエラーは出力しない）
