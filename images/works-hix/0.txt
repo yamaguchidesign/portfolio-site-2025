@@ -26,8 +26,8 @@ ID:hix
 紹介文:AGA対策アプリ「HIX」のブランドデザインとUI/UXデザインのリニューアルを担当しました。「HIX」の特徴である、アプリとミノキシジルの連携を表現するために、モデルの回転に合わせてメッセージが切り替わるビジュアルを作成。イラストやブランドカラーなども合わせてデザインし、サービス全体のブランディングを行いました。アプリでは、AGAの進行状況のチェックから、個人に合った対策の紹介など、ひとりひとりのAGAの悩みに向き合えるようにUI/UXの改善を行っています。
 
 --- English ---
-Client:Adastria Co., Ltd.
-Title:LAKOLE Key Visual Design
-Role:Art Director
-Tags:Illustration
-Description:Created the key visual for the lifestyle brand "LAKOLE (Rakore)." To convey the message that "if you go to Rakore, you can get everything you want 'this and that' all in one place for a stylish life," we developed the visual around the memorable phrase "Kore, Rakore." The graphic expresses how a couple with different tastes share the same space while using their favorite Rakore products, communicating the brand's wide range of products. The logo created to match this key visual is also used on the website and in commercials.
+Client:MBOX Inc.
+Title:AGA Treatment App "HIX" UI/UX
+Role:Designer
+Tags:UI/UX, Web
+Description:I was responsible for the brand design and UI/UX redesign of the AGA countermeasure app "HIX". To express the app's key feature—the integration with minoxidil—I created visuals where messages change in sync with the model's rotation. I also designed illustrations and brand colors, handling the overall service branding. For the app, I improved the UI/UX to address each individual's AGA concerns, from checking the progression of AGA to introducing personalized countermeasures.
