@@ -57,6 +57,9 @@ class TxtWorkReader {
             } else if (line.startsWith('Priority:')) {
                 const priorityStr = line.replace('Priority:', '').trim();
                 workInfo.priority = parseInt(priorityStr, 10);
+            } else if (line.startsWith('Role:')) {
+                // 共通セクションからROLEを読み込み
+                workInfo.role = line.replace('Role:', '').trim();
             } else if (line.startsWith('クライアント:')) {
                 workInfo.client = line.replace('クライアント:', '').trim();
             } else if (line.startsWith('作品名:')) {
@@ -65,7 +68,11 @@ class TxtWorkReader {
                 const tagsString = line.replace('タグ:', '').trim();
                 workInfo.tags = tagsString.split(',').map(tag => tag.trim());
             } else if (line.startsWith('役割:')) {
-                workInfo.role = line.replace('役割:', '').trim();
+                // 日本語セクションの「役割:」は無視（共通のRole:を優先）
+                // 後方互換性のため読み込みは残す
+                if (!workInfo.role) {
+                    workInfo.role = line.replace('役割:', '').trim();
+                }
             } else if (line.startsWith('紹介文:')) {
                 workInfo.description = line.replace('紹介文:', '').trim();
             }

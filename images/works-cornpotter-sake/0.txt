@@ -18,16 +18,15 @@
 --- 共通 ---
 ID:cornpotter-sake
 Priority:1
+Role:Art Director
 タグ:パッケージ,ブランディング
 
 --- 日本語 ---
 クライアント:木花乃醸造所
 作品名:クラフトサケ コーンポター酒 ラベルデザイン
-役割:Art Director
 紹介文:浅草初のCraft SAKE醸造所、木花乃醸造所とSAKEICEコラボ商品「コーンポター酒」のラベルデザインを担当しました。とうもろこしを使ったどぶろくをコーンポター酒と名付けたギャグ路線の商品です。あえて伝統と歴史を感じさせるデザインにすることで、「創業令和二年」が強烈な違和感を出すというアイデアを採用いただきました。写真は自身で撮影しています。
 
 --- English ---
 Client:Konohanano Brewery
 Title:Craft Sake Corn potage Sake Label Design
-Role:Art Director
 Description:Designed the label for "Corn potage Sake," a collaboration product between Kikano Brewery, Asakusa's first craft sake brewery, and SAKEICE. This is a gag product that uses corn to make doburoku (unrefined sake) and named it "Corn Pot Sake." We adopted the idea of creating a design that deliberately evokes tradition and history, making "Founded in Reiwa 2" create a strong sense of incongruity. I took the photos myself.

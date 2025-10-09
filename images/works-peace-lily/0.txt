@@ -18,16 +18,15 @@
 --- 共通 ---
 ID:peace-lily
 Priority:5
+Role:Art Director
 タグ:ロゴ,Web
 
 --- 日本語 ---
 クライアント:
 作品名:Peace Lily Webデザイン・KV
-役割:Art Director
 紹介文:「Peace Lily Hair Salon」のブランディングを体現するWebサイトを制作しました。ファーストビューには柔らかな光に包まれた女性の写真と、手書き風のタイポグラフィを組み合わせ、サロンの世界観をひと目で伝えています。ベージュとブラックを基調にまとめ、落ち着いた空気感の中に上質さを演出しました。
 
 --- English ---
 Client:
 Title:Peace Lily Web Design & KV
-Role:Art Director
 Description:Created a website that embodies the branding of "Peace Lily Hair Salon." The first view combines a photo of a woman wrapped in soft light with hand-drawn typography to instantly communicate the salon's world. We used beige and black as the base colors to create a sophisticated atmosphere within a calm ambiance.

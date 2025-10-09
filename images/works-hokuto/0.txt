@@ -1,0 +1,33 @@
+---
+タグ一覧
+・ロゴ
+・UI/UX
+・ブランディング
+・Web
+・キャラクターデザイン
+・パッケージ
+・イラストレーション
+
+役割一覧
+・Art Director
+・Designer
+・Illustrator
+・Engineer
+---
+
+--- 共通 ---
+ID:hokuto
+
+--- 日本語 ---
+クライアント:株式会社HOKUTO
+作品名:医師向け臨床支援アプリ「HOKUTO」
+役割:Designer
+タグ:UI/UX,Web
+紹介文:医師向け臨床支援アプリ「HOKUTO」のUXUIデザインを担当しています。日々増加していく膨大な医学情報を、医師が日常的にキャッチアップできるように、医学情報への素早いアクセスと効率的なストックができるフローを設計しました。また、PCでもアプリと同じ体験ができるようにwebサイト版のデザインも担当しています。その他にも、コーポレート関連や広報など、サービス全体のデザインを担当しています。
+
+--- English ---
+Client:MBOX Inc.
+Title:AGA Treatment App "HIX" UI/UX
+Role:Designer
+Tags:UI/UX, Web
+Description:I am responsible for the UX/UI design of "HOKUTO," a clinical support app for physicians. I designed workflows enabling quick access to and efficient storage of medical information, allowing doctors to keep up with the ever-growing volume of medical data in their daily practice. I also handle the design for the web version, ensuring the same experience as the app on PCs. Additionally, I oversee the design for the entire service, including corporate materials and public relations.
