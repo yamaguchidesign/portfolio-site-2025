@@ -17,6 +17,7 @@
 
 --- 共通 ---
 ID:mirza-logo
+Priority:0
 Role:Art Director
 タグ:ロゴ
 

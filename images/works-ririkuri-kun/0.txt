@@ -17,6 +17,7 @@
 
 --- 共通 ---
 ID:ririkuri-kun
+Priority:0
 Role:Art Director
 タグ:キャラクターデザイン
 
