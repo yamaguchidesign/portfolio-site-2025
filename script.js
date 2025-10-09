@@ -288,9 +288,6 @@ class Portfolio {
 
         // まず画像なしで作品を表示（高速表示）
         this.renderWorksWithoutImages();
-
-        // 画像を並列で読み込み（バックグラウンド処理）
-        this.loadImagesInBackground();
     }
 
     renderWorksWithoutImages() {
@@ -325,8 +322,10 @@ class Portfolio {
                     </div>
                 </div>
                 
-                <div class="work-images-vertical" id="images-${work.id}">
-                    <div class="image-loading">画像を読み込み中...</div>
+                <div class="work-images-vertical lazy-load-container" id="images-${work.id}" data-work-id="${work.id}">
+                    <div class="image-placeholder">
+                        <div class="placeholder-shimmer"></div>
+                    </div>
                 </div>
                 
                 <div class="work-description-vertical">
@@ -336,18 +335,59 @@ class Portfolio {
             </div>
             `;
         }).join('');
+
+        // Intersection Observerを設定
+        this.setupLazyLoading();
     }
 
-    async loadImagesInBackground() {
-        // 各作品の画像を並列で読み込み
-        this.works.forEach(async (work) => {
-            try {
-                const images = await this.loadWorkImages(work);
-                this.updateWorkImages(work.id, images);
-            } catch (error) {
-                console.error(`画像読み込みエラー (${work.id}):`, error);
-                this.updateWorkImages(work.id, []);
+    setupLazyLoading() {
+        // 並列読み込み数を制限するキュー
+        let loadingQueue = [];
+        let activeLoads = 0;
+        const MAX_CONCURRENT_LOADS = 3;
+
+        const processQueue = async () => {
+            while (loadingQueue.length > 0 && activeLoads < MAX_CONCURRENT_LOADS) {
+                activeLoads++;
+                const { work, container } = loadingQueue.shift();
+                
+                try {
+                    const images = await this.loadWorkImages(work);
+                    this.updateWorkImages(work.id, images);
+                } catch (error) {
+                    console.error(`画像読み込みエラー (${work.id}):`, error);
+                    this.updateWorkImages(work.id, []);
+                } finally {
+                    activeLoads--;
+                    processQueue(); // 次のキューを処理
+                }
             }
+        };
+
+        const imageObserver = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const container = entry.target;
+                    const workId = container.dataset.workId;
+                    const work = this.works.find(w => w.id === workId);
+                    
+                    if (work) {
+                        // キューに追加
+                        loadingQueue.push({ work, container });
+                        processQueue();
+                    }
+                    
+                    // 監視を解除
+                    observer.unobserve(container);
+                }
+            });
+        }, {
+            rootMargin: '200px' // 画面の200px手前から読み込み開始
+        });
+
+        // 全ての画像コンテナを監視
+        document.querySelectorAll('.lazy-load-container').forEach(container => {
+            imageObserver.observe(container);
         });
     }
 
@@ -356,8 +396,8 @@ class Portfolio {
         if (!imageContainer) return;
 
         if (images.length > 0) {
-            imageContainer.innerHTML = images.map(img => `
-                <img src="${img}" alt="作品画像" class="work-image-vertical" loading="lazy">
+            imageContainer.innerHTML = images.map((img, index) => `
+                <img src="${img}" alt="作品画像" class="work-image-vertical fade-in" loading="lazy" style="animation-delay: ${index * 0.1}s">
             `).join('');
         } else {
             imageContainer.innerHTML = '<p class="no-images">画像が見つかりませんでした。</p>';

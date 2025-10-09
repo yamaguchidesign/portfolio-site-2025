@@ -5,13 +5,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Shohei Yamaguchi - Portfolio</title>
+    
+    <!-- クリティカルCSS -->
     <link rel="stylesheet" href="style.css">
+    
+    <!-- フォントのプリコネクト -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://api.fontshare.com/v2/css?f[]=satoshi@400&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400&display=swap" rel="stylesheet">
+    
+    <!-- フォントの遅延読み込み -->
+    <link href="https://api.fontshare.com/v2/css?f[]=satoshi@400&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+    
     <link rel="icon"
         href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎨</text></svg>">
+    
+    <!-- クリティカルJavaScript（即座に実行） -->
     <script>
         // ページ読み込み時にスクロール位置を最上部にリセット
         window.addEventListener('beforeunload', function () {
@@ -148,11 +157,15 @@
         </section>
     </main>
 
+    <!-- JavaScriptの最適化された読み込み順序 -->
+    <!-- クリティカルなスクリプト（即座に実行） -->
     <script src="language-manager.js"></script>
     <script src="sidebar.js"></script>
-    <script src="data.js"></script>
-    <script src="txt-reader.js"></script>
-    <script src="script.js"></script>
+    
+    <!-- 非クリティカルなスクリプト（遅延読み込み） -->
+    <script src="data.js" defer></script>
+    <script src="txt-reader.js" defer></script>
+    <script src="script.js" defer></script>
 </body>
 
 </html>
