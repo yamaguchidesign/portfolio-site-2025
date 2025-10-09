@@ -350,7 +350,7 @@ class Portfolio {
             while (loadingQueue.length > 0 && activeLoads < MAX_CONCURRENT_LOADS) {
                 activeLoads++;
                 const { work, container } = loadingQueue.shift();
-                
+
                 try {
                     const images = await this.loadWorkImages(work);
                     this.updateWorkImages(work.id, images);
@@ -370,13 +370,13 @@ class Portfolio {
                     const container = entry.target;
                     const workId = container.dataset.workId;
                     const work = this.works.find(w => w.id === workId);
-                    
+
                     if (work) {
                         // キューに追加
                         loadingQueue.push({ work, container });
                         processQueue();
                     }
-                    
+
                     // 監視を解除
                     observer.unobserve(container);
                 }
