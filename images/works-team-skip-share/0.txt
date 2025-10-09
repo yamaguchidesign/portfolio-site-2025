@@ -17,17 +17,15 @@
 
 --- 共通 ---
 ID:team-skip-share
+Role:Art Director
+タグ:ロゴ,ブランディング
 
 --- 日本語 ---
 クライアント:NECソリューションイノベータ株式会社
 作品名:TEAM SKIP SHARE ブランディング
-役割:Art Director
-タグ:ロゴ,ブランディング
 紹介文:NECソリューションイノベータ株式会社が行うシェアリングエリア形成サービスのブランディングを担当しました。ブランドWSを通じてMission・Visionを策定後、ネーミングを「TEAM SKIP SHARE」に決定。エリア内でのつながりを表す「&」をモチーフに、思わずスキップしたくなるような楽しいサービスを表すロゴマークを制作しました。
 
 --- English ---
 Client:NEC Solution Innovators Ltd.
 Title:TEAM SKIP SHARE Branding
-Role:Art Director
-Tags:Logo,Branding
 Description:Handled the branding for a sharing area formation service by NEC Solution Innovators Ltd. After establishing Mission and Vision through brand workshops, we decided on the name "TEAM SKIP SHARE." We created a logo mark that represents a fun service that makes you want to skip, using "&" as a motif to represent connections within the area.

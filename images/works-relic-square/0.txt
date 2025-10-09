@@ -17,17 +17,15 @@
 
 --- 共通 ---
 ID:relic-square
+Role:Art Director
+タグ:ロゴ,Web
 
 --- 日本語 ---
 クライアント:株式会社Relic
 作品名:Relic SQUARE アートディレクション
-役割:Art Director
-タグ:ロゴ,Web
 紹介文:新規事業開発を支援するイノベーションワークプレイス事業、Relic SQUAREのアートディレクションを担当しました。メインブランドであるRelicが「リアルの場」を持つ事業を始めることに焦点を当て、Relicロゴを立体的に展開させたカタチをシンボルにしました。またLPでは、共創支援という機能価値を起業家へスポットライトを当てるという意味に置き換え、光を想起させるグラデーションを用いて表現しました。
 
 --- English ---
 Client:Relic Inc.
 Title:Relic SQUARE Art Direction
-Role:Art Director
-Tags:Logo,Web
 Description:Handled the art direction for Relic SQUARE, an innovation workplace business that supports new business development. Focusing on the main Relic brand starting a business with a "real place," we made the Relic logo expanded three-dimensionally into a symbol. In the landing page, we replaced the functional value of co-creation support with the meaning of spotlighting entrepreneurs, expressing it with gradients that evoke light.

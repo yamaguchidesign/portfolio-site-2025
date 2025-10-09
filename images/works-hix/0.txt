@@ -17,17 +17,15 @@
 
 --- 共通 ---
 ID:hix
+Role:Designer
+タグ:UI/UX,Web
 
 --- 日本語 ---
 クライアント:株式会社エムボックス
 作品名:AGA対策アプリ「HIX」UI/UX
-役割:Designer
-タグ:UI/UX,Web
 紹介文:AGA対策アプリ「HIX」のブランドデザインとUI/UXデザインのリニューアルを担当しました。「HIX」の特徴である、アプリとミノキシジルの連携を表現するために、モデルの回転に合わせてメッセージが切り替わるビジュアルを作成。イラストやブランドカラーなども合わせてデザインし、サービス全体のブランディングを行いました。アプリでは、AGAの進行状況のチェックから、個人に合った対策の紹介など、ひとりひとりのAGAの悩みに向き合えるようにUI/UXの改善を行っています。
 
 --- English ---
 Client:MBOX Inc.
 Title:AGA Treatment App "HIX" UI/UX
-Role:Designer
-Tags:UI/UX, Web
 Description:I was responsible for the brand design and UI/UX redesign of the AGA countermeasure app "HIX". To express the app's key feature—the integration with minoxidil—I created visuals where messages change in sync with the model's rotation. I also designed illustrations and brand colors, handling the overall service branding. For the app, I improved the UI/UX to address each individual's AGA concerns, from checking the progression of AGA to introducing personalized countermeasures.

@@ -17,17 +17,15 @@
 
 --- 共通 ---
 ID:otomo
+Role:Art Director
+タグ:ロゴ,Web,キャラクターデザイン
 
 --- 日本語 ---
 クライアント:株式会社おとも
 作品名:ガイドヘルパーズ ロゴ Web キャラクターデザイン
-役割:Art Director
-タグ:ロゴ,Web,キャラクターデザイン
 紹介文:ガイドヘルパーズは、外出したい視覚障害者とガイドヘルパー（同行援護従業者）をつなげるマッチングサービスです。実際に目の不自由な方にインタビューを行いながら、ガイドヘルパーと視覚障害者両方にとって最適なサービス体験を設計しました。
 
 --- English ---
 Client:Otomo Inc.
 Title:Guide Helpers Logo Web Character Design
-Role:Art Director
-Tags:Logo,Web,Character Design
 Description:Guide Helpers is a matching service that connects visually impaired people who want to go out with guide helpers (mobility support workers). We designed the optimal service experience for both guide helpers and visually impaired people while conducting interviews with people with visual impairments.

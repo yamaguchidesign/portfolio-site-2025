@@ -17,17 +17,15 @@
 
 --- 共通 ---
 ID:joy-planet
+Role:Art Director
+タグ:ロゴ,Web
 
 --- 日本語 ---
 クライアント:
 作品名:Joy Planet ロゴ Webデザイン
-役割:Art Director
-タグ:ロゴ,Web
 紹介文:親子で楽しめるプレイグラウンド「Joy Planet」の公式サイトをデザインしました。「遊び＝学び」をテーマに、カラフルでポップなビジュアルと、丸や三角といった遊び心ある図形モチーフを用いて、子どものワクワク感と安心感を両立させています。
 
 --- English ---
 Client:
 Title:Joy Planet Logo Web Design
-Role:Art Director
-Tags:Logo,Web
 Description:Designed the official website for "Joy Planet," a playground where parents and children can have fun together. With the theme of "play = learning," we used colorful and pop visuals with playful geometric motifs like circles and triangles to balance children's excitement with a sense of security.

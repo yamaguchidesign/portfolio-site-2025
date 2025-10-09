@@ -17,17 +17,15 @@
 
 --- 共通 ---
 ID:team-building-ui
+Role:Art Director
+タグ:UI/UX,イラストレーション
 
 --- 日本語 ---
 クライアント:日本電気株式会社
 作品名:チームビルディング UIUXデザイン
-役割:Art Director
-タグ:UI/UX,イラストレーション
 紹介文:社員のチームビルディングを目的とした会議室、レクリエーション予約サービスの事業開発検証のためのデザインを制作しました。SEESAWではコンセプトタグライン策定の段階からUIデザイン、デザインシステム作成までを担当しています。ビビットな配色や立体的でポップなイラストレーションを使用し、レクリエーションによるワクワク感を醸成させるビジュアルとしています。
 
 --- English ---
 Client:NEC Corporation
 Title:Team Building UI/UX Design
-Role:Art Director
-Tags:UI/UX,Illustration
 Description:Created designs for business development verification of a meeting room and recreation reservation service aimed at employee team building. At SEESAW, we handle everything from concept tagline development to UI design and design system creation. We use vibrant color schemes and three-dimensional pop illustrations to create visuals that foster excitement through recreation.
