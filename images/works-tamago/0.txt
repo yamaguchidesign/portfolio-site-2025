@@ -24,7 +24,7 @@ Role:Art Director
 --- 日本語 ---
 クライアント:楽天グループ株式会社
 作品名:楽天スーパーSALE連動! そだててクーポンたまご
-紹介文:「楽天スーパーSALE」の開催に合わせて実施しているブラウザゲーム企画「そだててクーポンたまご」。ゲーム企画立案・全体のアートディレクション・キャラクターデザイン・ゲームレベルデザイン・ロゴデザイン・オープニングムービー作成などを総合的に担当させていただきました。
+紹介文:「楽天スーパーSALE」の開催に合わせて実施しているブラウザゲーム企画「そだててクーポンたまご」。ゲーム企画立案・全体のアートディレクション・キャラクターデザイン/ネーミング・キャラクターモーション・ゲームレベルデザイン・ロゴデザイン・オープニングムービー作成などを総合的に担当させていただきました。
 
 数十体の「オトクミン」と呼ばれるキャラクターをたまごから
 ふ化させ、コンプリートを目指すクーポン配布施策ゲームです。
@@ -32,6 +32,4 @@ Role:Art Director
 --- English ---
 Client:Rakuten Group, Inc.
 Title:Rakuten Super Sale Link! Grow and Collect Coupon Eggs
-Description:The "Raise Coupon Eggs" browser game campaign, held in conjunction with the "Rakuten Super Sale." I was responsible for the comprehensive planning of the game concept, overall art direction, character design, game level design, logo design, and creation of the opening movie.
-
-This coupon distribution campaign game involves hatching dozens of characters called "Otokumin" from eggs, aiming for a complete collection.
+Description:For the browser game project "Raise Coupon Eggs," held in conjunction with the "Rakuten Super Sale," I was responsible for the comprehensive planning of the game project, overall art direction, character design/naming, character motion, game level design, logo design, and creation of the opening movie.
