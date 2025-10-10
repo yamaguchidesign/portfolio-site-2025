@@ -143,6 +143,11 @@ body {
     font-size: 14px;
 }
 
+/* セパレーター（上部にマージンを追加） */
+.nav-link-separator {
+    margin-top: 24px;
+}
+
 /* Tag Filter */
 .tag-filter {
     display: flex;

@@ -56,17 +56,18 @@ class Sidebar {
 
     getNavLinks() {
         const links = [
-            { href: 'index.html', text: 'Home', page: 'home', indent: false },
-            { href: 'index.html#about', text: 'About', page: 'about', indent: true },
-            { href: 'index.html#works', text: 'Selected Works', page: 'works', indent: true },
-            { href: 'index.html#contact', text: 'Contact', page: 'contact', indent: true },
-            { href: 'all-works.html', text: 'All Works', page: 'all-works', indent: false }
+            { href: 'index.html', text: 'Home', page: 'home', indent: false, separator: false },
+            { href: 'index.html#about', text: 'About', page: 'about', indent: true, separator: false },
+            { href: 'index.html#works', text: 'Selected Works', page: 'works', indent: true, separator: false },
+            { href: 'index.html#contact', text: 'Contact', page: 'contact', indent: true, separator: false },
+            { href: 'all-works.html', text: 'All Works', page: 'all-works', indent: false, separator: true }
         ];
 
         return links.map(link => {
             const isActive = this.isLinkActive(link.page);
             const indentClass = link.indent ? ' nav-link-indent' : '';
-            return `<a href="${link.href}" class="nav-link${isActive ? ' active' : ''}${indentClass}">${link.text}</a>`;
+            const separatorClass = link.separator ? ' nav-link-separator' : '';
+            return `<a href="${link.href}" class="nav-link${isActive ? ' active' : ''}${indentClass}${separatorClass}">${link.text}</a>`;
         }).join('');
     }
 
