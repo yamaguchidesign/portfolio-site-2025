@@ -1765,3 +1765,24 @@ body {
 .lazy-load-container.loading {
     pointer-events: none;
 }
+
+/* 動画スタイル */
+.work-video-vertical {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    margin-bottom: 16px;
+    display: block;
+    background: #000;
+    max-width: 100%;
+    object-fit: contain;
+}
+
+.work-video-vertical::-webkit-media-controls-panel {
+    background: rgba(0, 0, 0, 0.8);
+}
+
+/* 動画とフェードインアニメーションの組み合わせ */
+video.fade-in {
+    animation: fadeIn 0.6s ease-out forwards;
+}

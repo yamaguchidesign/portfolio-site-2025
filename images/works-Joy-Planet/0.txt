@@ -17,6 +17,7 @@
 
 --- 共通 ---
 ID:joy-planet
+Priority:0
 Role:Art Director
 タグ:ロゴ,Web
 

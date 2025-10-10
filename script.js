@@ -147,22 +147,28 @@ class Portfolio {
     }
 
 
-    async findImagesInFolder(folderPath) {
-        const imageExtensions = ['webp', 'png', 'jpg', 'jpeg', 'gif', 'svg'];
-        const foundImages = [];
+    isVideo(filePath) {
+        const videoExtensions = ['mp4', 'webm', 'mov'];
+        const extension = filePath.split('.').pop().toLowerCase();
+        return videoExtensions.includes(extension);
+    }
 
-        // 2桁のゼロパディングパターンを最初に試す: 01.webp, 02.webp など（WebPを最優先）
+    async findImagesInFolder(folderPath) {
+        const mediaExtensions = ['webp', 'png', 'jpg', 'jpeg', 'gif', 'svg', 'mp4', 'webm', 'mov'];
+        const foundMedia = [];
+
+        // 2桁のゼロパディングパターンを最初に試す: 01.webp, 02.webp, 01.mp4 など
         const twoDigitNumbers = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10'];
 
         for (const number of twoDigitNumbers) {
             let foundForThisNumber = false;
 
-            for (const ext of imageExtensions) {
-                const imagePath = `${folderPath}${number}.${ext}`;
+            for (const ext of mediaExtensions) {
+                const mediaPath = `${folderPath}${number}.${ext}`;
                 try {
-                    const response = await fetch(imagePath, { method: 'HEAD' });
+                    const response = await fetch(mediaPath, { method: 'HEAD' });
                     if (response.ok) {
-                        foundImages.push(imagePath);
+                        foundMedia.push(mediaPath);
                         foundForThisNumber = true;
                         break; // この番号でファイルが見つかったら、同じ番号の他の拡張子は探さず次の番号に進む
                     }
@@ -182,18 +188,18 @@ class Portfolio {
         }
 
         // 2桁でファイルが見つからない場合、1桁のパターンも試す: 1.jpg, 2.jpg など
-        if (foundImages.length === 0) {
-            const imageNumbers = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'];
+        if (foundMedia.length === 0) {
+            const mediaNumbers = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'];
 
-            for (const number of imageNumbers) {
+            for (const number of mediaNumbers) {
                 let foundForThisNumber = false;
 
-                for (const ext of imageExtensions) {
-                    const imagePath = `${folderPath}${number}.${ext}`;
+                for (const ext of mediaExtensions) {
+                    const mediaPath = `${folderPath}${number}.${ext}`;
                     try {
-                        const response = await fetch(imagePath, { method: 'HEAD' });
+                        const response = await fetch(mediaPath, { method: 'HEAD' });
                         if (response.ok) {
-                            foundImages.push(imagePath);
+                            foundMedia.push(mediaPath);
                             foundForThisNumber = true;
                             break; // この番号でファイルが見つかったら、同じ番号の他の拡張子は探さず次の番号に進む
                         }
@@ -213,7 +219,7 @@ class Portfolio {
             }
         }
 
-        return foundImages;
+        return foundMedia;
     }
 
 
@@ -396,9 +402,30 @@ class Portfolio {
         if (!imageContainer) return;
 
         if (images.length > 0) {
-            imageContainer.innerHTML = images.map((img, index) => `
-                <img src="${img}" alt="作品画像" class="work-image-vertical fade-in" loading="lazy" style="animation-delay: ${index * 0.1}s">
-            `).join('');
+            imageContainer.innerHTML = images.map((media, index) => {
+                if (this.isVideo(media)) {
+                    return `
+                        <video src="${media}" 
+                               class="work-video-vertical fade-in" 
+                               controls 
+                               autoplay 
+                               loop 
+                               muted 
+                               playsinline
+                               style="animation-delay: ${index * 0.1}s">
+                            お使いのブラウザは動画タグをサポートしていません。
+                        </video>
+                    `;
+                } else {
+                    return `
+                        <img src="${media}" 
+                             alt="作品画像" 
+                             class="work-image-vertical fade-in" 
+                             loading="lazy" 
+                             style="animation-delay: ${index * 0.1}s">
+                    `;
+                }
+            }).join('');
         } else {
             imageContainer.innerHTML = '<p class="no-images">画像が見つかりませんでした。</p>';
         }

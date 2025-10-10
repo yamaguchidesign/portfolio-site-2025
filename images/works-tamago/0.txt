@@ -1,0 +1,37 @@
+---
+タグ一覧
+・ロゴ
+・UI/UX
+・ブランディング
+・Web
+・キャラクターデザイン
+・パッケージ
+・イラストレーション
+
+役割一覧
+・Art Director
+・Designer
+・Illustrator
+・Engineer
+---
+
+--- 共通 ---
+ID:tamago
+Priority:0
+Role:Art Director
+タグ:ロゴ,UI/UX,Web,キャラクターデザイン,イラストレーション
+
+--- 日本語 ---
+クライアント:楽天グループ株式会社
+作品名:楽天スーパーSALE連動! そだててクーポンたまご
+紹介文:「楽天スーパーSALE」の開催に合わせて実施しているブラウザゲーム企画「そだててクーポンたまご」。ゲーム企画立案・全体のアートディレクション・キャラクターデザイン・ゲームレベルデザイン・ロゴデザイン・オープニングムービー作成などを総合的に担当させていただきました。
+
+数十体の「オトクミン」と呼ばれるキャラクターをたまごから
+ふ化させ、コンプリートを目指すクーポン配布施策ゲームです。
+
+--- English ---
+Client:Rakuten Group, Inc.
+Title:Rakuten Super Sale Link! Grow and Collect Coupon Eggs
+Description:The "Raise Coupon Eggs" browser game campaign, held in conjunction with the "Rakuten Super Sale." I was responsible for the comprehensive planning of the game concept, overall art direction, character design, game level design, logo design, and creation of the opening movie.
+
+This coupon distribution campaign game involves hatching dozens of characters called "Otokumin" from eggs, aiming for a complete collection.
