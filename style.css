@@ -705,7 +705,8 @@ body {
 
 .about-text ul {
     margin: 24px 0;
-    padding-left: 24px;
+    padding-left: 0;
+    list-style: none;
 }
 
 .about-text li {
