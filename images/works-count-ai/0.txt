@@ -1,0 +1,32 @@
+---
+タグ一覧
+・ロゴ
+・UI/UX
+・ブランディング
+・Web
+・キャラクターデザイン
+・パッケージ
+・イラストレーション
+
+役割一覧
+・Art Director
+・Designer
+・Illustrator
+・Engineer
+---
+
+--- 共通 ---
+ID:count-ai
+Priority:0
+Role:Art Director
+タグ:UI/UX,Web,イラストレーション
+
+--- 日本語 ---
+クライアント:株式会社StatHack
+作品名:toB向け製品カウントネイティブアプリ「Count AI」UI/UX、コミュニケーションデザイン
+紹介文:目視の員数検査をAIでカウントできるtoB向けネイティブアプリ「Count AI」のUI/UXと、LP制作などのコミュニケーションデザインを担当しました。前任のデザイナーから引き継ぎ、エンジニアや代表とスピード感を持って多くの画面設計を進めました。LPはノーコードツールStudioで実装も担当し、アプリやLPで繰り返し登場するイラストも制作しています。
+
+--- English ---
+Client:StatHack Inc.
+Title:B2B Product Count Native App "Count AI" UI/UX and Communication Design
+Description:I was responsible for the UI/UX design and communication design, including landing page creation, for "Count AI," a native B2B app that uses AI to count items visually inspected by personnel. Taking over from the previous designer, I collaborated with engineers and the CEO to rapidly advance numerous screen designs. I also handled the implementation of the landing page using the no-code tool Studio.

@@ -1,0 +1,32 @@
+---
+タグ一覧
+・ロゴ
+・UI/UX
+・ブランディング
+・Web
+・キャラクターデザイン
+・パッケージ
+・イラストレーション
+
+役割一覧
+・Art Director
+・Designer
+・Illustrator
+・Engineer
+---
+
+--- 共通 ---
+ID:highway
+Priority:0
+Role:Art Director
+タグ:パッケージ,ブランディング
+
+--- 日本語 ---
+クライアント:株式会社ハイウェイ
+作品名:代理店管理ツール「ハイウェイ」UI/UX、コミュニケーションデザイン
+紹介文:案件管理、情報共有、レポーティングなどをデジタル化できるPRMソリューション「ハイウェイ」のUI/UX、コミュニケーションデザインを担当しました。サービス立ち上げ当初、デザイナー不在だったタイミングでジョインし、UI/UX改善と、LPやSNS広告などのコミュニケーションデザインを担当しました。複雑な階層構造を持つサービスを扱いやすくするよう、構造・骨格・表層フェーズのデザイン改修を行いました。
+
+--- English ---
+Client:Highway Co., Ltd.
+Title:Agency Management Tool "Highway" UI/UX and Communication Design
+Description:I was responsible for the UI/UX and communication design of Highway, a PRM solution that digitizes case management, information sharing, reporting, and more. I joined the team during the service launch phase when there was no designer, handling UI/UX improvements and communication design for landing pages and social media ads. To make the service with its complex hierarchical structure more user-friendly, I conducted design revisions across structural, skeletal, and surface-level phases.
