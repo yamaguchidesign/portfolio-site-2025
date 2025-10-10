@@ -265,8 +265,53 @@ class TxtWorkReader {
 
     // 利用可能な作品IDを取得（画像フォルダから自動検出）
     async getAvailableWorkIds() {
-        // 新しいIDベースのフォルダ名のリスト（Netlifyでの読み込み問題を回避するため、固定リストを使用）
-        const folderNames = [
+        const workIds = [];
+
+        try {
+            // まず動的にフォルダ一覧を取得を試みる
+            const response = await fetch('images/');
+            if (response.ok) {
+                const html = await response.text();
+                
+                // HTMLから works- で始まるフォルダ名を抽出
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+                const links = doc.querySelectorAll('a');
+                
+                const folderNames = [];
+                links.forEach(link => {
+                    const href = link.getAttribute('href');
+                    if (href && href.startsWith('works-') && href.endsWith('/')) {
+                        folderNames.push(href.replace('/', ''));
+                    }
+                });
+
+                console.log('Detected folders:', folderNames);
+
+                // 検出されたフォルダの0.txtファイルをチェック
+                for (const folderName of folderNames) {
+                    try {
+                        const txtResponse = await fetch(`images/${folderName}/0.txt`);
+                        if (txtResponse.ok) {
+                            const workId = folderName.replace('works-', '');
+                            workIds.push(workId);
+                        }
+                    } catch (error) {
+                        // 0.txtが見つからない場合はスキップ
+                    }
+                }
+
+                if (workIds.length > 0) {
+                    console.log('Dynamically loaded work IDs:', workIds);
+                    return workIds;
+                }
+            }
+        } catch (error) {
+            console.log('Dynamic folder detection failed, using fallback list');
+        }
+
+        // フォールバック: 固定リスト（Netlifyなどの静的ホスティング用）
+        const fallbackFolderNames = [
             'works-al-medical-assist',
             'works-aru-yoi-sake',
             'works-cornpotter-sake',
@@ -289,22 +334,20 @@ class TxtWorkReader {
             'works-yozakura-noh'
         ];
 
-        const workIds = [];
-
         // 各フォルダの0.txtファイルをチェック
-        for (const folderName of folderNames) {
+        for (const folderName of fallbackFolderNames) {
             try {
                 const response = await fetch(`images/${folderName}/0.txt`);
                 if (response.ok) {
-                    // フォルダ名からIDを生成（実際のIDは0.txtから読み込まれる）
                     const workId = folderName.replace('works-', '');
                     workIds.push(workId);
                 }
             } catch (error) {
-                console.error(`Error loading 0.txt for ${folderName}:`, error); // デバッグ用
+                // エラーは無視
             }
         }
 
+        console.log('Using fallback list, loaded work IDs:', workIds);
         return workIds;
     }
 }
