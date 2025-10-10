@@ -281,7 +281,8 @@ class TxtWorkReader {
                 const folderNames = [];
                 links.forEach(link => {
                     const href = link.getAttribute('href');
-                    if (href && href.startsWith('works-') && href.endsWith('/')) {
+                    // works- で始まり、- では始まらないフォルダのみ対象
+                    if (href && href.startsWith('works-') && !href.startsWith('-') && href.endsWith('/')) {
                         folderNames.push(href.replace('/', ''));
                     }
                 });
