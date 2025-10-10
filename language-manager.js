@@ -117,6 +117,10 @@ class LanguageManager {
                 } else if (line.startsWith('Priority:')) {
                     const priorityStr = line.replace('Priority:', '').trim();
                     workInfo.priority = parseInt(priorityStr, 10);
+                } else if (line.startsWith('Role:')) {
+                    // 共通セクションからROLEを読み込み
+                    workInfo.japanese.role = line.replace('Role:', '').trim();
+                    workInfo.english.role = line.replace('Role:', '').trim();
                 } else if (line.startsWith('タグ:')) {
                     const tagsString = line.replace('タグ:', '').trim();
                     workInfo.tags = tagsString.split(',').map(tag => tag.trim());
