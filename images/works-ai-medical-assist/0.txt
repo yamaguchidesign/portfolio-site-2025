@@ -16,7 +16,7 @@
 ---
 
 --- 共通 ---
-ID:al-medical-assist
+ID:ai-medical-assist
 Priority:0
 Role:Art Director
 タグ:ロゴ

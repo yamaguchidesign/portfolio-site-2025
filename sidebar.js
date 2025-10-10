@@ -56,15 +56,17 @@ class Sidebar {
 
     getNavLinks() {
         const links = [
-            { href: 'index.html', text: 'Home', page: 'home' },
-            { href: 'all-works.html', text: 'All Works', page: 'all-works' },
-            { href: 'index.html#about', text: 'About', page: 'about' },
-            { href: 'index.html#contact', text: 'Contact', page: 'contact' }
+            { href: 'index.html', text: 'Home', page: 'home', indent: false },
+            { href: 'index.html#about', text: 'About', page: 'about', indent: true },
+            { href: 'index.html#works', text: 'Selected Works', page: 'works', indent: true },
+            { href: 'index.html#contact', text: 'Contact', page: 'contact', indent: true },
+            { href: 'all-works.html', text: 'All Works', page: 'all-works', indent: false }
         ];
 
         return links.map(link => {
             const isActive = this.isLinkActive(link.page);
-            return `<a href="${link.href}" class="nav-link${isActive ? ' active' : ''}">${link.text}</a>`;
+            const indentClass = link.indent ? ' nav-link-indent' : '';
+            return `<a href="${link.href}" class="nav-link${isActive ? ' active' : ''}${indentClass}">${link.text}</a>`;
         }).join('');
     }
 

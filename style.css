@@ -137,6 +137,12 @@ body {
     color: #000;
 }
 
+/* インデントされたナビゲーションリンク */
+.nav-link-indent {
+    padding-left: 16px;
+    font-size: 14px;
+}
+
 /* Tag Filter */
 .tag-filter {
     display: flex;
@@ -282,14 +288,14 @@ body {
 }
 
 .work-card-content {
-    padding: 32px;
+    padding: 24px;
 }
 
 .work-card-title {
     font-size: 20px;
     font-weight: 600;
     color: #000;
-    margin: 0 0 12px 0;
+    margin: 0 0 8px 0;
     line-height: 1.4;
 }
 
@@ -303,7 +309,7 @@ body {
 .work-card-role {
     font-size: 12px;
     color: #999;
-    margin: 0 0 24px 0;
+    margin: 0 0 12px 0;
     text-transform: uppercase;
     letter-spacing: 0.5px;
 }
