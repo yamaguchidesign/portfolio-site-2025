@@ -1,0 +1,32 @@
+---
+タグ一覧
+・ロゴ
+・UI/UX
+・ブランディング
+・Web
+・キャラクターデザイン
+・パッケージ
+・イラストレーション
+
+役割一覧
+・Art Director
+・Designer
+・Illustrator
+・Engineer
+---
+
+--- 共通 ---
+ID:minchalle
+Priority:0
+Role:Designer
+タグ:UI/UX
+
+--- 日本語 ---
+クライアント:エーテンラボ株式会社
+作品名:モバイルアプリみんちゃれ UI/UX
+紹介文:三日坊主防止アプリ「みんチャレ」のUIデザインや印刷物に長期に渡って携わりました。「同じ目標を持つ他人と一緒に習慣化を目指す」という新しい体験を、楽しく分かりやすく伝えるため、日々アプリのUXUIを改善しています。アプリ、Web、印刷物、動画広告など、プロダクトとコミュニケーションデザイン両方を担当させていただきました。
+
+--- English ---
+Client:A10 Lab Co., Ltd.
+Title:Mobile App Minchare UI/UX
+Description:I was involved in the UI design and print materials for the "MinChalle" app, which helps prevent people from giving up on their goals after just three days. To convey the new experience of "working with others who share the same goal to build habits" in a fun and easy-to-understand way, I continuously improved the app's UX/UI. I was responsible for both product and communication design across the app, web, print materials, and video ads.

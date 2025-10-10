@@ -762,43 +762,73 @@ async function loadWorkImages(workId, folderName) {
         return;
     }
 
-    // 画像を表示
+    // 画像と動画を表示
     imagesContainer.innerHTML = '';
-    imageFiles.forEach((imageFile, index) => {
-        const imgElement = document.createElement('img');
-        imgElement.src = `images/${folderName}/${imageFile}`;
-        imgElement.alt = `作品画像 ${index + 1}`;
-        imgElement.className = 'work-image';
-        imgElement.loading = 'lazy';
+    imageFiles.forEach((mediaFile, index) => {
+        const mediaPath = `images/${folderName}/${mediaFile}`;
+        
+        if (isVideo(mediaFile)) {
+            // 動画の場合
+            const videoElement = document.createElement('video');
+            videoElement.src = mediaPath;
+            videoElement.className = 'work-video';
+            videoElement.controls = true;
+            videoElement.autoplay = true;
+            videoElement.loop = true;
+            videoElement.muted = true;
+            videoElement.playsInline = true;
+            videoElement.setAttribute('playsinline', '');
+            
+            // 動画読み込みエラーの処理
+            videoElement.onerror = function () {
+                this.style.display = 'none';
+            };
+            
+            imagesContainer.appendChild(videoElement);
+        } else {
+            // 画像の場合
+            const imgElement = document.createElement('img');
+            imgElement.src = mediaPath;
+            imgElement.alt = `作品画像 ${index + 1}`;
+            imgElement.className = 'work-image';
+            imgElement.loading = 'lazy';
 
-        // 画像読み込みエラーの処理
-        imgElement.onerror = function () {
-            this.style.display = 'none';
-        };
+            // 画像読み込みエラーの処理
+            imgElement.onerror = function () {
+                this.style.display = 'none';
+            };
 
-        imagesContainer.appendChild(imgElement);
+            imagesContainer.appendChild(imgElement);
+        }
     });
+}
+
+// ファイルが動画かどうかを判定
+function isVideo(filePath) {
+    const videoExtensions = ['mp4', 'webm', 'mov'];
+    const extension = filePath.split('.').pop().toLowerCase();
+    return videoExtensions.includes(extension);
 }
 
 // 指定されたフォルダの画像ファイルを取得
 async function getImageFiles(folderName) {
     const imageFiles = [];
-    // PNGを最初に、JPGを次に探す順序に変更
-    const imageExtensions = ['png', 'jpg', 'jpeg', 'gif', 'webp', 'svg'];
+    // WebPを最優先、動画も検索対象に
+    const mediaExtensions = ['webp', 'png', 'jpg', 'jpeg', 'gif', 'svg', 'mp4', 'webm', 'mov'];
 
     // 画像ファイルを順番にチェック（01.png, 02.png... または 1.png, 2.png...）
     for (let i = 1; i <= 10; i++) {
         let foundForThisNumber = false;
 
         // まず2桁の形式（01, 02...）をチェック
-        for (let ext of imageExtensions) {
+        for (let ext of mediaExtensions) {
             const filename = `${String(i).padStart(2, '0')}.${ext}`;
             try {
                 const response = await fetch(`images/${folderName}/${filename}`, { method: 'HEAD' });
                 if (response.ok) {
                     imageFiles.push(filename);
                     foundForThisNumber = true;
-                    break; // 同じ番号の画像が見つかったら次の番号へ
+                    break; // 同じ番号のファイルが見つかったら次の番号へ
                 }
             } catch (error) {
                 // ファイルが存在しない場合は無視
@@ -807,14 +837,14 @@ async function getImageFiles(folderName) {
 
         // 2桁の形式で見つからない場合は1桁の形式（1, 2...）をチェック
         if (!foundForThisNumber) {
-            for (let ext of imageExtensions) {
+            for (let ext of mediaExtensions) {
                 const filename = `${i}.${ext}`;
                 try {
                     const response = await fetch(`images/${folderName}/${filename}`, { method: 'HEAD' });
                     if (response.ok) {
                         imageFiles.push(filename);
                         foundForThisNumber = true;
-                        break; // 同じ番号の画像が見つかったら次の番号へ
+                        break; // 同じ番号のファイルが見つかったら次の番号へ
                     }
                 } catch (error) {
                     // ファイルが存在しない場合は無視
