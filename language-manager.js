@@ -131,7 +131,8 @@ class LanguageManager {
                 } else if (line.startsWith('作品名:')) {
                     workInfo.japanese.title = line.replace('作品名:', '').trim();
                 } else if (line.startsWith('役割:')) {
-                    workInfo.japanese.role = line.replace('役割:', '').trim();
+                    // 日本語セクションの役割は無視（共通のRole:を優先）
+                    // workInfo.japanese.role = line.replace('役割:', '').trim();
                 } else if (line.startsWith('紹介文:')) {
                     workInfo.japanese.description = line.replace('紹介文:', '').trim();
                 }
@@ -141,7 +142,8 @@ class LanguageManager {
                 } else if (line.startsWith('Title:')) {
                     workInfo.english.title = line.replace('Title:', '').trim();
                 } else if (line.startsWith('Role:')) {
-                    workInfo.english.role = line.replace('Role:', '').trim();
+                    // 英語セクションのRole:は無視（共通のRole:を優先）
+                    // workInfo.english.role = line.replace('Role:', '').trim();
                 } else if (line.startsWith('Description:')) {
                     workInfo.english.description = line.replace('Description:', '').trim();
                 }

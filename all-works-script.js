@@ -157,116 +157,22 @@ class AllWorks {
             return workData;
         }
 
-        // フォールバック: languageManagerがない場合は日本語のみパース
-        return this.parseWorkText(text, folderName);
-    }
-
-    parseWorkText(text, folderName) {
-        const lines = text.trim().split('\n');
-        const workInfo = {
-            id: '', // IDフィールドから取得するまで空文字
-            client: '',
-            title: '',
-            description: '',
-            tags: [],
-            role: '', // 役割フィールドを追加
-            rawText: text,
-            folderName: folderName // フォルダ名を保存
-        };
-
-        let currentSection = '';
-
-        // 各行を解析
-        for (let line of lines) {
-            line = line.trim();
-
-            if (line.startsWith('--- 共通 ---')) {
-                currentSection = 'common';
-            } else if (line.startsWith('--- 日本語 ---')) {
-                currentSection = 'ja';
-            } else if (line.startsWith('--- English ---')) {
-                currentSection = 'en';
-            } else if (line.startsWith('---')) {
-                currentSection = ''; // セクション終了
-            }
-
-            if (currentSection === 'common') {
-                if (line.startsWith('ID:')) {
-                    // 固定IDを優先
-                    workInfo.id = line.replace('ID:', '').trim();
-                    console.log('固定IDを発見:', workInfo.id);
-                } else if (line.startsWith('Priority:')) {
-                    const priorityStr = line.replace('Priority:', '').trim();
-                    workInfo.priority = parseInt(priorityStr, 10);
-                } else if (line.startsWith('Role:')) {
-                    // 共通セクションからROLEを読み込み
-                    workInfo.role = line.replace('Role:', '').trim();
-                } else if (line.startsWith('タグ:')) {
-                    const tagsString = line.replace('タグ:', '').trim();
-                    workInfo.tags = tagsString.split(',').map(tag => tag.trim());
-                    console.log('タグを解析しました:', tagsString, '→', workInfo.tags);
-                }
-            } else if (currentSection === 'ja') {
-                if (line.startsWith('クライアント:')) {
-                    workInfo.client = line.replace('クライアント:', '').trim();
-                } else if (line.startsWith('作品名:')) {
-                    workInfo.title = line.replace('作品名:', '').trim();
-                } else if (line.startsWith('紹介文:')) {
-                    workInfo.description = line.replace('紹介文:', '').trim();
-                }
-                // 日本語セクションの「役割:」は無視（共通のRole:を優先）
-                // 後方互換性のため読み込みは残す
-                if (line.startsWith('役割:') && !workInfo.role) {
-                    workInfo.role = line.replace('役割:', '').trim();
-                }
-            } else if (currentSection === 'en') { // English section for English language
-                if (line.startsWith('Client:')) {
-                    workInfo.client = line.replace('Client:', '').trim();
-                } else if (line.startsWith('Title:')) {
-                    workInfo.title = line.replace('Title:', '').trim();
-                } else if (line.startsWith('Description:')) {
-                    workInfo.description = line.replace('Description:', '').trim();
-                }
-                // English section's "Role:" is ignored (common Role: is prioritized)
-                // Keep for backward compatibility
-                if (line.startsWith('Role:') && !workInfo.role) {
-                    workInfo.role = line.replace('Role:', '').trim();
-                }
-            }
-        }
+        // フォールバック: 共通パーサーを使用
+        const workData = TxtWorkReader.parseWorkTextCommon(text, {
+            includeRawText: true,
+            includeFolderName: true,
+            folderName: folderName
+        });
 
         // IDフィールドが見つからない場合は、フォルダ名から生成
-        if (!workInfo.id) {
-            workInfo.id = this.generateWorkId(folderName);
-            console.log('IDフィールドが見つからないため、フォルダ名から生成:', workInfo.id);
+        if (!workData.id) {
+            workData.id = this.generateWorkId(folderName);
+            console.log('IDフィールドが見つからないため、フォルダ名から生成:', workData.id);
         }
 
-        // 紹介文が複数行にわたる場合の処理
-        if (!workInfo.description && workInfo.rawText) {
-            // クライアント、作品名、タグ、IDの行を除いた残りを紹介文として扱う
-            const clientLine = lines.find(line => line.trim().startsWith('クライアント:'));
-            const titleLine = lines.find(line => line.trim().startsWith('作品名:'));
-            const tagLine = lines.find(line => line.trim().startsWith('タグ:'));
-            const idLine = lines.find(line => line.trim().startsWith('ID:'));
-
-            const otherLines = lines.filter(line =>
-                line.trim() !== clientLine &&
-                line.trim() !== titleLine &&
-                line.trim() !== tagLine &&
-                line.trim() !== idLine &&
-                line.trim() !== '' &&
-                !line.startsWith('---') &&
-                !line.startsWith('タグ一覧') &&
-                !line.startsWith('・')
-            );
-
-            if (otherLines.length > 0) {
-                workInfo.description = otherLines.join(' ');
-            }
-        }
-
-        return workInfo;
+        return workData;
     }
+
 
     extractAllTags() {
         this.works.forEach(work => {

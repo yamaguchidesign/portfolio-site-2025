@@ -249,75 +249,9 @@ const tagTranslations = {
 
 // 0.txtファイルをパース
 function parseWorkText(text) {
-    const lines = text.split('\n');
-    const work = {
-        client: '',
-        title: '',
-        tags: [],
-        description: '',
-        role: '', // 役割フィールドを追加
-        images: []
-    };
-
-    let currentSection = '';
-
-    for (let line of lines) {
-        line = line.trim();
-        if (!line) continue;
-
-        if (line.startsWith('--- 共通 ---')) {
-            currentSection = 'common';
-        } else if (line.startsWith('--- 日本語 ---')) {
-            currentSection = 'ja';
-        } else if (line.startsWith('--- English ---')) {
-            currentSection = 'en';
-        } else if (line.startsWith('---')) {
-            currentSection = ''; // セクション終了
-        }
-
-        if (currentSection === 'common') {
-            if (line.startsWith('ID:')) {
-                // IDは別途処理
-            } else if (line.startsWith('Priority:')) {
-                const priorityStr = line.replace('Priority:', '').trim();
-                work.priority = parseInt(priorityStr, 10);
-            } else if (line.startsWith('Role:')) {
-                // 共通セクションからROLEを読み込み
-                work.role = line.replace('Role:', '').trim();
-            } else if (line.startsWith('タグ:')) {
-                const tagsStr = line.replace('タグ:', '').trim();
-                work.tags = tagsStr.split(',').map(tag => tag.trim());
-            }
-        } else if (currentSection === 'ja') {
-            if (line.startsWith('クライアント:')) {
-                work.client = line.replace('クライアント:', '').trim();
-            } else if (line.startsWith('作品名:')) {
-                work.title = line.replace('作品名:', '').trim();
-            } else if (line.startsWith('紹介文:')) {
-                work.description = line.replace('紹介文:', '').trim();
-            }
-            // 日本語セクションの「役割:」は無視（共通のRole:を優先）
-            // 後方互換性のため読み込みは残す
-            if (line.startsWith('役割:') && !work.role) {
-                work.role = line.replace('役割:', '').trim();
-            }
-        } else if (currentSection === 'en') { // English section for English language
-            if (line.startsWith('Client:')) {
-                work.client = line.replace('Client:', '').trim();
-            } else if (line.startsWith('Title:')) {
-                work.title = line.replace('Title:', '').trim();
-            } else if (line.startsWith('Description:')) {
-                work.description = line.replace('Description:', '').trim();
-            }
-            // English section's "Role:" is ignored (common Role: is prioritized)
-            // Keep for backward compatibility
-            if (line.startsWith('Role:') && !work.role) {
-                work.role = line.replace('Role:', '').trim();
-            }
-        }
-    }
-
-    work.description = work.description.trim();
+    // 共通パーサーを使用
+    const work = TxtWorkReader.parseWorkTextCommon(text);
+    work.images = []; // 画像配列を追加
     return work;
 }
 

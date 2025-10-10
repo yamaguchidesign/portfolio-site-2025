@@ -4,6 +4,119 @@ class TxtWorkReader {
         this.workData = null;
     }
 
+    // 共通パーサー関数：0.txtファイルの内容を解析
+    static parseWorkTextCommon(text, options = {}) {
+        const {
+            includeRawText = false,
+            includeFolderName = false,
+            folderName = null
+        } = options;
+
+        const lines = text.trim().split('\n');
+        const workInfo = {
+            id: '',
+            client: '',
+            title: '',
+            description: '',
+            tags: [],
+            role: '',
+            priority: null
+        };
+
+        // オプションで追加情報を含める
+        if (includeRawText) {
+            workInfo.rawText = text;
+        }
+        if (includeFolderName && folderName) {
+            workInfo.folderName = folderName;
+        }
+
+        let currentSection = '';
+
+        // 各行を解析
+        for (let line of lines) {
+            line = line.trim();
+
+            // セクション検出
+            if (line.startsWith('--- 共通 ---')) {
+                currentSection = 'common';
+            } else if (line.startsWith('--- 日本語 ---')) {
+                currentSection = 'ja';
+            } else if (line.startsWith('--- English ---')) {
+                currentSection = 'en';
+            } else if (line.startsWith('---')) {
+                currentSection = ''; // セクション終了
+            }
+
+            // 各セクションのデータを解析
+            if (currentSection === 'common') {
+                if (line.startsWith('ID:')) {
+                    workInfo.id = line.replace('ID:', '').trim();
+                } else if (line.startsWith('Priority:')) {
+                    const priorityStr = line.replace('Priority:', '').trim();
+                    workInfo.priority = parseInt(priorityStr, 10);
+                } else if (line.startsWith('Role:')) {
+                    // 共通セクションからROLEを読み込み
+                    workInfo.role = line.replace('Role:', '').trim();
+                } else if (line.startsWith('タグ:')) {
+                    const tagsString = line.replace('タグ:', '').trim();
+                    workInfo.tags = tagsString.split(',').map(tag => tag.trim());
+                }
+            } else if (currentSection === 'ja') {
+                if (line.startsWith('クライアント:')) {
+                    workInfo.client = line.replace('クライアント:', '').trim();
+                } else if (line.startsWith('作品名:')) {
+                    workInfo.title = line.replace('作品名:', '').trim();
+                } else if (line.startsWith('紹介文:')) {
+                    workInfo.description = line.replace('紹介文:', '').trim();
+                }
+                // 日本語セクションの「役割:」は無視（共通のRole:を優先）
+                // 後方互換性のため読み込みは残す
+                if (line.startsWith('役割:') && !workInfo.role) {
+                    workInfo.role = line.replace('役割:', '').trim();
+                }
+            } else if (currentSection === 'en') {
+                if (line.startsWith('Client:')) {
+                    workInfo.client = line.replace('Client:', '').trim();
+                } else if (line.startsWith('Title:')) {
+                    workInfo.title = line.replace('Title:', '').trim();
+                } else if (line.startsWith('Description:')) {
+                    workInfo.description = line.replace('Description:', '').trim();
+                }
+                // English section's "Role:" is ignored (common Role: is prioritized)
+                // Keep for backward compatibility
+                if (line.startsWith('Role:') && !workInfo.role) {
+                    workInfo.role = line.replace('Role:', '').trim();
+                }
+            }
+        }
+
+        // 紹介文が複数行にわたる場合の処理
+        if (!workInfo.description && workInfo.rawText) {
+            const descriptionLines = lines.filter(line =>
+                !line.startsWith('---') &&
+                !line.startsWith('ID:') &&
+                !line.startsWith('Priority:') &&
+                !line.startsWith('Role:') &&
+                !line.startsWith('タグ:') &&
+                !line.startsWith('クライアント:') &&
+                !line.startsWith('作品名:') &&
+                !line.startsWith('役割:') &&
+                !line.startsWith('Client:') &&
+                !line.startsWith('Title:') &&
+                !line.startsWith('Description:') &&
+                line.trim() !== '' &&
+                !line.startsWith('タグ一覧') &&
+                !line.startsWith('・')
+            );
+            if (descriptionLines.length > 0) {
+                workInfo.description = descriptionLines.join(' ').trim();
+            }
+        }
+
+        return workInfo;
+    }
+
     // txtファイルを読み込んで作品情報を解析
     async loadWorkFromTxt(workId) {
         // 複数のtxtファイル名を試行
