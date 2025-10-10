@@ -484,6 +484,17 @@ body {
 .works {
     padding: 80px 0 80px 0;
     overflow-x: hidden;
+    position: relative;
+}
+
+.works::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -270px;
+    right: -20px;
+    height: 1px;
+    background: #eee;
 }
 
 .works-vertical {
