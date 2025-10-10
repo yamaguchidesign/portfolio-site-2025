@@ -272,12 +272,12 @@ class TxtWorkReader {
             const response = await fetch('images/');
             if (response.ok) {
                 const html = await response.text();
-                
+
                 // HTMLから works- で始まるフォルダ名を抽出
                 const parser = new DOMParser();
                 const doc = parser.parseFromString(html, 'text/html');
                 const links = doc.querySelectorAll('a');
-                
+
                 const folderNames = [];
                 links.forEach(link => {
                     const href = link.getAttribute('href');
@@ -327,7 +327,7 @@ class TxtWorkReader {
             'works-otomo',
             'works-peace-lily',
             'works-relic-square',
-            'works-ririkuri-kun',
+            'works-rimawari-kun',
             'works-tamago',
             'works-team-building-ui',
             'works-team-skip-share',

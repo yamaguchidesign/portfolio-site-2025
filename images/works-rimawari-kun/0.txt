@@ -16,7 +16,7 @@
 ---
 
 --- 共通 ---
-ID:ririkuri-kun
+ID:rimawari-kun
 Priority:0
 Role:Art Director
 タグ:キャラクターデザイン
