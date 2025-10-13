@@ -290,6 +290,12 @@ class Portfolio {
 
     renderWorksWithoutImages() {
         const worksVertical = document.getElementById('worksVertical');
+        
+        // スケルトンローダーを削除
+        const skeletonLoader = document.getElementById('skeletonLoader');
+        if (skeletonLoader) {
+            skeletonLoader.remove();
+        }
 
         // 現在の言語を取得
         const currentLang = window.languageManager ? window.languageManager.getCurrentLanguage() : 'ja';
