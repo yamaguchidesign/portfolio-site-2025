@@ -1618,6 +1618,8 @@ body {
     cursor: pointer;
     transition: all 0.3s ease;
     margin-top: 24px;
+    display: none;
+    /* デフォルトで非表示 */
 }
 
 .download-work-btn:hover {
@@ -1625,6 +1627,9 @@ body {
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
+
+/* ボタンを表示したい場合は、このコメントを外してください */
+/* .download-work-btn { display: block; } */
 
 /* エクスポートモーダル */
 .export-modal {
