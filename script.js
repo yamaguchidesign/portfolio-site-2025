@@ -55,8 +55,8 @@ class Portfolio {
             try {
                 const txtWorkData = await txtReader.loadWorkFromTxt(workId);
 
-                if (txtWorkData && txtWorkData.priority && txtWorkData.priority > 0) {
-                    // Priorityが設定された作品のみを処理
+                if (txtWorkData && txtWorkData.priority && txtWorkData.priority > 0 && txtWorkData.priority < 6) {
+                    // Priority が 1〜5 の作品のみを処理
                     const folderName = `works-${workId}`;
 
                     const newWork = {
