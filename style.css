@@ -517,6 +517,20 @@ body {
     padding: 0px;
 }
 
+/* ホバー時のオーバーレイを防止 */
+.work-item-vertical .work-video-vertical {
+    position: relative;
+    z-index: 1;
+}
+
+.work-item-vertical:hover .work-video-vertical::before {
+    display: none;
+}
+
+.work-item-vertical:hover .work-video-vertical::after {
+    display: none;
+}
+
 .work-item-vertical::after {
     content: '';
     position: absolute;
@@ -1805,9 +1819,31 @@ body {
     border-radius: 8px;
     margin-bottom: 16px;
     display: block;
-    background: #000;
+    background: transparent !important;
     max-width: 100%;
     object-fit: contain;
+}
+
+.work-video-vertical:hover {
+    background: transparent !important;
+}
+
+/* コントロールパネルのスタイル */
+.work-video-vertical::-webkit-media-controls {
+    background: transparent;
+}
+
+.work-video-vertical::-webkit-media-controls-panel {
+    background: rgba(0, 0, 0, 0.5);
+}
+
+.work-video-vertical::-webkit-media-controls-play-button,
+.work-video-vertical::-webkit-media-controls-timeline,
+.work-video-vertical::-webkit-media-controls-current-time-display,
+.work-video-vertical::-webkit-media-controls-time-remaining-display,
+.work-video-vertical::-webkit-media-controls-mute-button,
+.work-video-vertical::-webkit-media-controls-volume-slider {
+    color: white;
 }
 
 .work-video-vertical::-webkit-media-controls-panel {

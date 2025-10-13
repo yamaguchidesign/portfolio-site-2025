@@ -404,7 +404,7 @@ class Portfolio {
                                loop 
                                muted 
                                playsinline
-                               style="animation-delay: ${index * 0.1}s">
+                               style="animation-delay: ${index * 0.1}s; background: transparent;">
                             お使いのブラウザは動画タグをサポートしていません。
                         </video>
                     `;
