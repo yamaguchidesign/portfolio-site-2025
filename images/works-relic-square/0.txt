@@ -17,7 +17,7 @@
 
 --- 共通 ---
 ID:relic-square
-Priority:0
+Priority:1
 Role:Art Director
 タグ:ロゴ,Web
 

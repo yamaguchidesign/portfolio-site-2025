@@ -1,0 +1,34 @@
+---
+タグ一覧
+・ロゴ
+・UI/UX
+・ブランディング
+・Web
+・キャラクターデザイン
+・パッケージ
+・イラストレーション
+
+役割一覧
+・Art Director
+・Designer
+・Illustrator
+・Engineer
+---
+
+--- 共通 ---
+ID:otomo
+Priority:1
+Role:Art Director
+タグ:ロゴ,Web,キャラクターデザイン
+
+--- 日本語 ---
+クライアント:株式会社宣伝会議
+作品名:KAIGI GROUP アートディレクション
+紹介文:広告の業界誌「宣伝会議」、「ブレーン」、転職エージェント「マスメディアン」など、多くの事業を展開するKAIGI GROUPの大規模なブランディングに携わりました。長年愛されてきた、三角形が環状に並ぶシンボルのDNAを継承しつつ、企業の提供価値を反映したグループを統括する新法人の名称、タグライン、ロゴを制作。また、多数のブランドへ展開するためのロゴ及びWebサイトのデザインシステムを構築しました。
+⚫︎参照はコチラから　https://kaigi-group.com/
+
+--- English ---
+Client:Sendenkaigi Co., Ltd.
+Title:KAIGI GROUP Art Direction
+Description:I was involved in the large-scale branding for KAIGI GROUP, which operates numerous businesses including the advertising industry magazines "Senden Kaigi" and "Brain," and the recruitment agency "Massmedian." While inheriting the DNA of the long-beloved symbol featuring triangles arranged in a ring, I created the name, tagline, and logo for the new holding company that unifies the group, reflecting the corporate value proposition. I also built the logo and website design system for deployment across multiple brands.
+⚫︎See here for reference: https://kaigi-group.com/

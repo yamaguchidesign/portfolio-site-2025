@@ -1,0 +1,32 @@
+---
+タグ一覧
+・ロゴ
+・UI/UX
+・ブランディング
+・Web
+・キャラクターデザイン
+・パッケージ
+・イラストレーション
+
+役割一覧
+・Art Director
+・Designer
+・Illustrator
+・Engineer
+---
+
+--- 共通 ---
+ID:berilo-coffee
+Priority:0
+Role:Art Director
+タグ:ロゴ,Web,パッケージ
+
+--- 日本語 ---
+クライアント:BERILO COFFEE
+作品名:BERILO COFFEE ブランドサイト
+紹介文:深みのある味わいと哲学が特徴のコーヒーブランドBERILO COFFEEのWebデザインを制作しました。「Do it with Coffee Strong」というコピーを軸に、高級感のある世界観を構築しています。特徴的なカリグラフィ調フォントをメインタイトルに使用し、クラシックとモダンのバランスを両立させました。パッケージデザインも制作し、3DCGで作成したキービジュアルも配置しています。
+
+--- English ---
+Client:BERILO COFFEE
+Title:BERILO COFFEE Brand Site
+Description:We created the web design for BERILO COFFEE, a coffee brand characterized by its deep flavor and philosophy. Centered around the tagline "Do it with Coffee Strong," we built a sophisticated brand world. A distinctive calligraphy-style font was used for the main title, achieving a balance between classic and modern aesthetics. We also designed the packaging and incorporated key visuals created using 3DCG.

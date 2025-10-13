@@ -17,7 +17,7 @@
 
 --- 共通 ---
 ID:otomo
-Priority:0
+Priority:1
 Role:Art Director
 タグ:ロゴ,Web,キャラクターデザイン
 

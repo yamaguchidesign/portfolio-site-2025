@@ -1,0 +1,32 @@
+---
+タグ一覧
+・ロゴ
+・UI/UX
+・ブランディング
+・Web
+・キャラクターデザイン
+・パッケージ
+・イラストレーション
+
+役割一覧
+・Art Director
+・Designer
+・Illustrator
+・Engineer
+---
+
+--- 共通 ---
+ID:one-axis-design
+Priority:0
+Role:Art Director
+タグ:Web
+
+--- 日本語 ---
+クライアント:One Axis Design
+作品名:One Axis Design Webデザイン
+紹介文:グローバルに展開するデザイン会社「One Axis Design」のコーポレートサイトを制作しました。緻密なグリッドと幾何学的なラインの構成で、ブランド名「One Axis」のコンセプトを空間全体に体現しています。理性的でありながら温度を感じる紙質テクスチャを背景に用い、アナログとデジタルの両方を得意とするブランドの立ち位置を表現しました。
+
+--- English ---
+Client:One Axis Design
+Title:One Axis Design Web Design
+Description:We created the corporate website for One Axis Design, a globally expanding design company. The site embodies the brand name "One Axis" concept throughout its space with a precise grid and geometric line composition. A rational yet warm paper texture was used as the background, expressing the brand's position as an expert in both analog and digital.
