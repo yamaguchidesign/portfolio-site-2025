@@ -66,22 +66,6 @@ class AllWorks {
     async detectWorksFolders() {
         const detectedWorks = [];
 
-        // 既知のworksフォルダをチェック（数字のみ）
-        for (let i = 1; i <= 20; i++) {
-            try {
-                const response = await fetch(`images/works-${i}/0.txt`);
-                if (response.ok) {
-                    const txtContent = await response.text();
-                    const workData = this.parseWorkTextWithLanguage(txtContent, i);
-                    if (workData) {
-                        detectedWorks.push(workData);
-                    }
-                }
-            } catch (error) {
-                // ファイルが存在しない場合は無視
-            }
-        }
-
         // 動的フォルダ検出: サーバーサイドでフォルダ一覧を取得
         try {
             const response = await fetch('images/');
@@ -89,46 +73,97 @@ class AllWorks {
                 const html = await response.text();
                 const worksFolders = this.extractWorksFoldersFromHTML(html);
 
+                console.log('動的に検出されたフォルダ数:', worksFolders.length);
+
                 for (const folderName of worksFolders) {
                     try {
-                        const response = await fetch(`images/${folderName}/0.txt`);
-                        if (response.ok) {
-                            const txtContent = await response.text();
+                        const txtResponse = await fetch(`images/${folderName}/0.txt`);
+                        if (txtResponse.ok) {
+                            const txtContent = await txtResponse.text();
                             const workData = this.parseWorkTextWithLanguage(txtContent, folderName);
                             if (workData) {
-                                // 既に追加済みでないかチェック
-                                const existingWork = detectedWorks.find(work => work.id === workData.id);
-                                if (!existingWork) {
-                                    detectedWorks.push(workData);
-                                    console.log(`動的フォルダから検出された作品 ${folderName}:`, workData);
-                                }
+                                detectedWorks.push(workData);
+                                console.log(`動的フォルダから検出された作品 ${folderName}:`, workData);
                             }
                         }
                     } catch (error) {
                         // ファイルが存在しない場合は無視
                     }
                 }
+
+                if (detectedWorks.length > 0) {
+                    console.log('動的検出が成功しました。作品数:', detectedWorks.length);
+                    return detectedWorks;
+                }
             }
         } catch (error) {
-            console.log('動的フォルダ検出に失敗しました:', error);
+            console.log('動的フォルダ検出に失敗しました。フォールバックを使用します。', error);
         }
 
+        // フォールバック: 固定リスト（Netlifyなどの静的ホスティング用）
+        const fallbackFolderNames = [
+            'works-al-medical-assist',
+            'works-aru-yoi-sake',
+            'works-cornpotter-sake',
+            'works-count-ai',
+            'works-hix',
+            'works-highway',
+            'works-hokuto',
+            'works-joy-planet',
+            'works-kaigi',
+            'works-lakole-keyvisual',
+            'works-mirza-logo',
+            'works-minchalle',
+            'works-natural-water-salmon',
+            'works-one-axis-design',
+            'works-otomo',
+            'works-peace-lily',
+            'works-relic-square',
+            'works-rimawari-kun',
+            'works-tamago',
+            'works-team-building-ui',
+            'works-team-skip-share',
+            'works-yozakura-noh'
+        ];
+
+        console.log('フォールバックリストを使用します。フォルダ数:', fallbackFolderNames.length);
+
+        for (const folderName of fallbackFolderNames) {
+            try {
+                const response = await fetch(`images/${folderName}/0.txt`);
+                if (response.ok) {
+                    const txtContent = await response.text();
+                    const workData = this.parseWorkTextWithLanguage(txtContent, folderName);
+                    if (workData) {
+                        detectedWorks.push(workData);
+                        console.log(`フォールバックから検出された作品 ${folderName}:`, workData);
+                    }
+                }
+            } catch (error) {
+                // エラーは無視
+            }
+        }
+
+        console.log('フォールバック検出完了。作品数:', detectedWorks.length);
         return detectedWorks;
     }
 
     extractWorksFoldersFromHTML(html) {
         // HTMLからworks-で始まるフォルダを抽出
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, 'text/html');
+        const links = doc.querySelectorAll('a');
         const worksFolders = [];
-        const regex = /href="([^"]*works-[^"]*)\/"/g;
-        let match;
 
-        while ((match = regex.exec(html)) !== null) {
-            const folderName = match[1];
-            // works-で始まり、数字のみでないフォルダを抽出
-            if (folderName.startsWith('works-') && !folderName.match(/works-\d+$/)) {
+        links.forEach(link => {
+            const href = link.getAttribute('href');
+            // works- で始まるフォルダのみ対象（-works- で始まるフォルダは自動的に除外される）
+            if (href && href.startsWith('works-') && href.endsWith('/')) {
+                const folderName = href.replace('/', '');
                 worksFolders.push(folderName);
+                console.log('検出されたフォルダ:', folderName);
             }
-        }
+        });
 
         return worksFolders;
     }
