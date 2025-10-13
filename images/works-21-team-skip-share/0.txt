@@ -17,7 +17,7 @@
 
 --- 共通 ---
 ID:team-skip-share
-Priority:0
+Priority:21
 Role:Art Director
 タグ:ロゴ,ブランディング
 

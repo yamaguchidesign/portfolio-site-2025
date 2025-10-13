@@ -17,7 +17,7 @@
 
 --- 共通 ---
 ID:yozakura-noh
-Priority:3
+Priority:22
 Role:Designer
 タグ:UI/UX,Web
 

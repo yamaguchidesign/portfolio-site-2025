@@ -17,7 +17,7 @@
 
 --- 共通 ---
 ID:lakole-keyvisual
-Priority:0
+Priority:13
 Role:Art Director
 タグ:イラストレーション
 

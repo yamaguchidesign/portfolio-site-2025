@@ -17,7 +17,7 @@
 
 --- 共通 ---
 ID:hix
-Priority:0
+Priority:3
 Role:Designer
 タグ:UI/UX,Web
 

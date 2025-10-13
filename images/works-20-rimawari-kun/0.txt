@@ -17,7 +17,7 @@
 
 --- 共通 ---
 ID:rimawari-kun
-Priority:0
+Priority:20
 Role:Art Director
 タグ:キャラクターデザイン
 

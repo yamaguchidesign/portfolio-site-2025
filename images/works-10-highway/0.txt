@@ -17,7 +17,7 @@
 
 --- 共通 ---
 ID:highway
-Priority:0
+Priority:10
 Role:Art Director
 タグ:パッケージ,ブランディング
 

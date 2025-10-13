@@ -17,7 +17,7 @@
 
 --- 共通 ---
 ID:count-ai
-Priority:0
+Priority:9
 Role:Art Director
 タグ:UI/UX,Web,イラストレーション
 

@@ -17,7 +17,7 @@
 
 --- 共通 ---
 ID:natural-water-salmon
-Priority:4
+Priority:16
 Role:Art Director
 タグ:ロゴ,Web,パッケージ,ブランディング
 

@@ -17,7 +17,7 @@
 
 --- 共通 ---
 ID:team-building-ui
-Priority:0
+Priority:4
 Role:Art Director
 タグ:UI/UX,イラストレーション
 

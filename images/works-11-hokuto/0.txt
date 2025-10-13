@@ -17,7 +17,7 @@
 
 --- 共通 ---
 ID:hokuto
-Priority:0
+Priority:11
 Role:Designer
 タグ:UI/UX,Web
 
