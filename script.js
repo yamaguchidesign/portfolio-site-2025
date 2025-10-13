@@ -398,13 +398,14 @@ class Portfolio {
                 if (this.isVideo(media)) {
                     return `
                         <video src="${media}" 
-                               class="work-video-vertical fade-in" 
+                               class="work-video fade-in" 
                                controls 
                                autoplay 
                                loop 
                                muted 
                                playsinline
-                               style="animation-delay: ${index * 0.1}s; background: transparent;">
+                               preload="auto"
+                               style="animation-delay: ${index * 0.1}s">
                             お使いのブラウザは動画タグをサポートしていません。
                         </video>
                     `;

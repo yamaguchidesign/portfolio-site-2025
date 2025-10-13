@@ -16,7 +16,7 @@
 ---
 
 --- 共通 ---
-ID:otomo
+ID:kaigi-group
 Priority:1
 Role:Art Director
 タグ:ロゴ,Web,キャラクターデザイン

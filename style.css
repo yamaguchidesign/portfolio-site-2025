@@ -1813,41 +1813,39 @@ body {
 }
 
 /* 動画スタイル */
-.work-video-vertical {
+.work-video {
     width: 100%;
-    height: auto;
+    max-height: 800px;
+    object-fit: contain;
+    background: transparent !important;
+    display: block;
     border-radius: 8px;
     margin-bottom: 16px;
-    display: block;
-    background: transparent !important;
-    max-width: 100%;
-    object-fit: contain;
+    position: relative;
+    z-index: 2;
+    /* 他の要素のホバー効果の上に表示 */
 }
 
-.work-video-vertical:hover {
+.work-video:hover {
     background: transparent !important;
 }
 
 /* コントロールパネルのスタイル */
-.work-video-vertical::-webkit-media-controls {
+.work-video::-webkit-media-controls {
     background: transparent;
 }
 
-.work-video-vertical::-webkit-media-controls-panel {
+.work-video::-webkit-media-controls-panel {
     background: rgba(0, 0, 0, 0.5);
 }
 
-.work-video-vertical::-webkit-media-controls-play-button,
-.work-video-vertical::-webkit-media-controls-timeline,
-.work-video-vertical::-webkit-media-controls-current-time-display,
-.work-video-vertical::-webkit-media-controls-time-remaining-display,
-.work-video-vertical::-webkit-media-controls-mute-button,
-.work-video-vertical::-webkit-media-controls-volume-slider {
+.work-video::-webkit-media-controls-play-button,
+.work-video::-webkit-media-controls-timeline,
+.work-video::-webkit-media-controls-current-time-display,
+.work-video::-webkit-media-controls-time-remaining-display,
+.work-video::-webkit-media-controls-mute-button,
+.work-video::-webkit-media-controls-volume-slider {
     color: white;
-}
-
-.work-video-vertical::-webkit-media-controls-panel {
-    background: rgba(0, 0, 0, 0.8);
 }
 
 /* 動画とフェードインアニメーションの組み合わせ */

@@ -744,6 +744,7 @@ async function loadWorkImages(workId, folderName) {
             videoElement.muted = true;
             videoElement.playsInline = true;
             videoElement.setAttribute('playsinline', '');
+            videoElement.setAttribute('preload', 'auto');
 
             // 動画読み込みエラーの処理
             videoElement.onerror = function () {
