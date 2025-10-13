@@ -313,26 +313,28 @@ class TxtWorkReader {
 
         // フォールバック: 固定リスト（Netlifyなどの静的ホスティング用）
         const fallbackFolderNames = [
-            'works-al-medical-assist',
-            'works-aru-yoi-sake',
-            'works-cornpotter-sake',
-            'works-count-ai',
-            'works-hix',
-            'works-highway',
-            'works-hokuto',
-            'works-joy-planet',
-            'works-lakole-keyvisual',
-            'works-mirza-logo',
-            'works-minchalle',
-            'works-natural-water-salmon',
-            'works-otomo',
-            'works-peace-lily',
-            'works-relic-square',
-            'works-rimawari-kun',
-            'works-tamago',
-            'works-team-building-ui',
-            'works-team-skip-share',
-            'works-yozakura-noh'
+            'works-01-kaigi',
+            'works-02-tamago',
+            'works-03-hix',
+            'works-04-team-building-ui',
+            'works-05-relic-square',
+            'works-06-aru-yoi-sake',
+            'works-07-berilo-coffee',
+            'works-08-cornpotter-sake',
+            'works-09-count-ai',
+            'works-10-highway',
+            'works-11-hokuto',
+            'works-12-joy-planet',
+            'works-13-lakole-keyvisual',
+            'works-14-minchalle',
+            'works-15-mirza-logo',
+            'works-16-natural-water-salmon',
+            'works-17-one-axis-design',
+            'works-18-otomo',
+            'works-19-peace-lily',
+            'works-20-rimawari-kun',
+            'works-21-team-skip-share',
+            'works-22-yozakura-noh'
         ];
 
         // 各フォルダの0.txtファイルをチェック
