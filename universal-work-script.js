@@ -707,6 +707,16 @@ function downloadPNG() {
 
 // 作品ページをレンダリング
 function renderWorkPage(work) {
+    // スケルトンローダーを削除して実際のコンテンツを表示
+    const skeletonLoader = document.getElementById('workSkeletonLoader');
+    const workContent = document.getElementById('workContent');
+    
+    if (skeletonLoader) {
+        skeletonLoader.style.display = 'none';
+    }
+    if (workContent) {
+        workContent.style.display = 'block';
+    }
 
     // ページタイトルを更新
     document.title = `${work.title} - Shohei Yamaguchi`;

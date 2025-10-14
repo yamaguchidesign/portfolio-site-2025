@@ -26,24 +26,49 @@
         <!-- Work Detail -->
         <section class="work-detail">
             <div class="container">
-                <div class="work-header">
-                    <p class="work-client">Loading...</p>
-                    <h1 class="work-title">Loading...</h1>
-                    <div class="work-meta">
-                        <p class="work-role">Loading...</p>
-                        <div class="work-tags">Loading...</div>
+                <!-- Loading skeleton -->
+                <div class="work-skeleton-loader" id="workSkeletonLoader">
+                    <div class="work-skeleton-header">
+                        <div class="work-skeleton-client"></div>
+                        <div class="work-skeleton-title"></div>
+                        <div class="work-skeleton-meta">
+                            <div class="work-skeleton-role"></div>
+                            <div class="work-skeleton-tags"></div>
+                        </div>
+                    </div>
+                    <div class="work-skeleton-images">
+                        <div class="work-skeleton-image"></div>
+                        <div class="work-skeleton-image"></div>
+                        <div class="work-skeleton-image"></div>
+                    </div>
+                    <div class="work-skeleton-description">
+                        <div class="work-skeleton-text"></div>
+                        <div class="work-skeleton-text"></div>
+                        <div class="work-skeleton-text"></div>
                     </div>
                 </div>
+                
+                <!-- Actual content (hidden initially) -->
+                <div id="workContent" style="display: none;">
+                    <div class="work-header">
+                        <p class="work-client">Loading...</p>
+                        <h1 class="work-title">Loading...</h1>
+                        <div class="work-meta">
+                            <p class="work-role">Loading...</p>
+                            <div class="work-tags">Loading...</div>
+                        </div>
+                    </div>
 
-                <div class="work-images">
-                    <!-- Images will be loaded dynamically -->
-                </div>
+                    <div class="work-images">
+                        <!-- Images will be loaded dynamically -->
+                    </div>
 
-                <div class="work-description">
-                    <p>Loading...</p>
-                </div>
-                <div class="work-actions">
-                    <button id="download-work-png" class="download-work-btn">実績資料をダウンロードする</button>
+                    <div class="work-description">
+                        <p>Loading...</p>
+                    </div>
+                    <div class="work-actions">
+                        <button id="download-work-png" class="download-work-btn">実績資料をダウンロードする</button>
+                    </div>
                 </div>
             </div>
         </section>
