@@ -290,7 +290,7 @@ class Portfolio {
 
     renderWorksWithoutImages() {
         const worksVertical = document.getElementById('worksVertical');
-        
+
         // スケルトンローダーを削除
         const skeletonLoader = document.getElementById('skeletonLoader');
         if (skeletonLoader) {
