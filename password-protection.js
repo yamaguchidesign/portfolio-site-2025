@@ -34,18 +34,6 @@ const passwordConfig = {
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
         }
         
-        .password-title {
-            font-size: 24px;
-            font-weight: 600;
-            color: #000;
-            margin-bottom: 16px;
-        }
-        
-        .password-subtitle {
-            font-size: 14px;
-            color: #666;
-            margin-bottom: 32px;
-        }
         
         .password-input {
             width: 100%;
@@ -84,13 +72,6 @@ const passwordConfig = {
             margin-top: 12px;
             display: none;
         }
-        
-        .password-hint {
-            font-size: 12px;
-            color: #999;
-            margin-top: 24px;
-            line-height: 1.4;
-        }
     `
 };
 
@@ -116,15 +97,9 @@ function initPasswordProtection() {
     overlay.className = 'password-overlay';
     overlay.innerHTML = `
         <div class="password-container">
-            <h1 class="password-title">Portfolio Access</h1>
-            <p class="password-subtitle">このポートフォリオサイトの閲覧にはパスワードが必要です</p>
             <input type="password" class="password-input" placeholder="パスワードを入力" id="passwordInput">
             <button class="password-button" id="passwordSubmit">アクセス</button>
             <div class="password-error" id="passwordError">パスワードが正しくありません</div>
-            <p class="password-hint">
-                ※ このパスワード保護は簡易的なものです<br>
-                技術的な知識があれば回避可能です
-            </p>
         </div>
     `;
 
