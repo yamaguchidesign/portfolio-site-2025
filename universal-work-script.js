@@ -196,44 +196,95 @@ async function loadWorkData(workId) {
 // 作品IDからフォルダ名を取得
 async function getFolderNameFromWorkId(workId) {
     try {
+        // 動的フォルダ検出を試す
         const response = await fetch('images/');
-        if (!response.ok) return null;
+        if (response.ok) {
+            const html = await response.text();
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(html, 'text/html');
+            const links = doc.querySelectorAll('a[href]');
 
-        const html = await response.text();
-        const parser = new DOMParser();
-        const doc = parser.parseFromString(html, 'text/html');
-        const links = doc.querySelectorAll('a[href]');
+            for (let link of links) {
+                const href = link.getAttribute('href');
+                if (href && href.startsWith('works-') && href.endsWith('/')) {
+                    const folderName = href.slice(0, -1); // 末尾の/を削除
 
-        for (let link of links) {
-            const href = link.getAttribute('href');
-            if (href && href.startsWith('works-') && href.endsWith('/')) {
-                const folderName = href.slice(0, -1); // 末尾の/を削除
-
-                // このフォルダの0.txtをチェックしてIDを確認
-                try {
-                    const txtResponse = await fetch(`images/${folderName}/0.txt`);
-                    if (txtResponse.ok) {
-                        const txtText = await txtResponse.text();
-                        const lines = txtText.split('\n');
-                        for (let line of lines) {
-                            if (line.startsWith('ID:')) {
-                                const id = line.replace('ID:', '').trim();
-                                if (id === workId) {
-                                    return folderName;
+                    // このフォルダの0.txtをチェックしてIDを確認
+                    try {
+                        const txtResponse = await fetch(`images/${folderName}/0.txt`);
+                        if (txtResponse.ok) {
+                            const txtText = await txtResponse.text();
+                            const lines = txtText.split('\n');
+                            for (let line of lines) {
+                                if (line.startsWith('ID:')) {
+                                    const id = line.replace('ID:', '').trim();
+                                    if (id === workId) {
+                                        return folderName;
+                                    }
                                 }
                             }
                         }
+                    } catch (e) {
+                        // エラーは無視して次のフォルダをチェック
                     }
-                } catch (e) {
-                    // エラーは無視して次のフォルダをチェック
                 }
             }
         }
-        return null;
     } catch (error) {
-        console.error('フォルダ名の取得エラー:', error);
-        return null;
+        console.log('動的フォルダ検出に失敗しました。フォールバックを使用します。', error);
     }
+
+    // フォールバック: 固定リスト（Netlifyなどの静的ホスティング用）
+    const fallbackFolderNames = [
+        'works-01-kaigi',
+        'works-02-tamago',
+        'works-03-hix',
+        'works-04-team-building-ui',
+        'works-05-relic-square',
+        'works-06-aru-yoi-sake',
+        'works-07-berilo-coffee',
+        'works-08-cornpotter-sake',
+        'works-09-count-ai',
+        'works-10-highway',
+        'works-11-hokuto',
+        'works-12-joy-planet',
+        'works-13-lakole-keyvisual',
+        'works-14-minchalle',
+        'works-15-mirza-logo',
+        'works-16-natural-water-salmon',
+        'works-17-one-axis-design',
+        'works-18-otomo',
+        'works-19-peace-lily',
+        'works-20-rimawari-kun',
+        'works-21-team-skip-share',
+        'works-22-yozakura-noh'
+    ];
+
+    console.log('フォールバックリストから検索:', workId);
+
+    for (const folderName of fallbackFolderNames) {
+        try {
+            const txtResponse = await fetch(`images/${folderName}/0.txt`);
+            if (txtResponse.ok) {
+                const txtText = await txtResponse.text();
+                const lines = txtText.split('\n');
+                for (let line of lines) {
+                    if (line.startsWith('ID:')) {
+                        const id = line.replace('ID:', '').trim();
+                        if (id === workId) {
+                            console.log('フォールバックから発見:', folderName);
+                            return folderName;
+                        }
+                    }
+                }
+            }
+        } catch (e) {
+            // エラーは無視して次のフォルダをチェック
+        }
+    }
+
+    console.error('フォルダ名が見つかりませんでした:', workId);
+    return null;
 }
 
 // Tag translations
