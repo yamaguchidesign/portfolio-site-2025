@@ -4,10 +4,10 @@
 const passwordConfig = {
     // パスワード保護を有効にするかどうか
     enablePasswordProtection: true,
-    
+
     // パスワード（変更してください）
-    password: "portfolio2025",
-    
+    password: "ymgc",
+
     // パスワード入力画面のスタイル
     styles: `
         .password-overlay {
@@ -137,7 +137,7 @@ function initPasswordProtection() {
 
     function checkPassword() {
         const enteredPassword = passwordInput.value;
-        
+
         if (enteredPassword === passwordConfig.password) {
             // パスワード正解
             sessionStorage.setItem('portfolio_authenticated', 'true');
@@ -147,7 +147,7 @@ function initPasswordProtection() {
             passwordError.style.display = 'block';
             passwordInput.value = '';
             passwordInput.focus();
-            
+
             // エラーメッセージを3秒後に非表示
             setTimeout(() => {
                 passwordError.style.display = 'none';
